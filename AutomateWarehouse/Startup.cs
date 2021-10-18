@@ -27,19 +27,20 @@ namespace AutomateWarehouse
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddRazorPages();
-      services.AddServerSideBlazor();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+            services.AddScoped<ProductRepository>();
 
-      services.AddDbContext<ApplicationDbContext>(options => 
+            services.AddDbContext<ApplicationDbContext>(options =>
       {
-        options.UseSqlite("Data Source = AutomateWarehouse.db");
+          options.UseSqlite("Data Source = AutomateWarehouse.db");
       });
-    }
+        }
 
 
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
       {

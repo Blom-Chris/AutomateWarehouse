@@ -1,0 +1,41 @@
+﻿@page "/allProducts"
+@using AutomateWarehouse.Data
+@inject ProductRepository productRepository
+
+<h3>Products</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Restocking date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Productss.Any())
+        {
+            @foreach (var prod in Productss)
+            {
+                <tr>
+                    <td>@prod.Name</td>
+                    <td>@prod.Description</td>
+                    <td>@prod.Price</td>
+                    <td>@prod.Stock</td>
+                    <td>@prod.RestockingDate</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Product> Productss;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Productss = await productRepository.GetAllProductsAsync();
+    }
+}
