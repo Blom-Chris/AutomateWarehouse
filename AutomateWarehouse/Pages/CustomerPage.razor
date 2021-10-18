@@ -1,0 +1,37 @@
+﻿@page "/allCustomers"
+@using AutomateWarehouse.Data
+@inject CustomerRepository customerRepo
+
+<h3>CustomerPage</h3>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    @if (customers.Any())
+    {
+      @foreach (var cust in customers)
+      {
+        <tr>
+          <td>@cust.Name</td>
+          <td>@cust.Phone</td>
+          <td>@cust.Email</td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
+
+@code {
+  private List<Customer> customers;
+
+  protected override async Task OnInitializedAsync()
+  {
+    customers = await customerRepo.GetCustomerAsync();
+  }
+}
