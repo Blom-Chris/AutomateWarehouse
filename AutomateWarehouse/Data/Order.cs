@@ -15,5 +15,6 @@ namespace AutomateWarehouse.Data
     public bool PaymentCompleted { get; set; }
     public bool Dispatched { get; set; }
     public List<OrderLine> Items { get; set; }
+        public int TestProp { get; set; }
   }
 }
