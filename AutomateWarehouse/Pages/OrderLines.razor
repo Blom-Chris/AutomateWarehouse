@@ -1,0 +1,51 @@
+﻿@*OrderLine kommer väl inte ha en egen sida, 
+men gjorde den bara för att testa nu*@
+
+@page "/orderLines"
+@using AutomateWarehouse.Data
+@inject OrderLineRepository orderLineRepository
+@inject ProductRepository productRepository
+
+<h3>OrderLines</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Product Id</th>
+            <th>Product name</th>
+            <th>Quantity</th>
+            <th>Order Id</th>
+            <th>Customer</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ListOfOrderLines.Any())
+        {
+            @foreach (var orderLine in ListOfOrderLines)
+            {
+                <tr>
+                    <td>@orderLine.Id</td>
+                    <td>@orderLine.ProductId</td>
+                    <td>@orderLine.Product.Name</td>
+                    <td>@orderLine.Quantity</td>
+                    <td>@orderLine.OrderId</td>
+                    <td>n/a</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<OrderLine> ListOfOrderLines;
+    private List<Product> ListOfProducts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListOfOrderLines = await orderLineRepository.GetAllOrderLinesAsync();
+        ListOfProducts = await productRepository.GetAllProductsAsync();
+    }
+
+
+}
