@@ -9,6 +9,8 @@ namespace AutomateWarehouse.Data
   {
     Task<List<Customer>> GetCustomerAsync();
     Task<Customer> AddCustomerAsync(Customer customer);
-    Task<Customer> UpdateCustomerAsync(Customer customer);
+    Task<Customer> DeleteCustomerAsync(Customer customer);
+    Task<Customer> EditCustomerAsync(Customer customer);
+
   }
 }

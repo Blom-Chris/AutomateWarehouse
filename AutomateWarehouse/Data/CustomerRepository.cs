@@ -33,7 +33,21 @@ namespace AutomateWarehouse.Data
       return customer;
     }
 
-    public async Task<Customer> UpdateCustomerAsync(Customer customer)
+    public async Task<Customer> DeleteCustomerAsync(Customer customer)
+    {
+      try
+      {
+        applicationDbContext.Remove(customer);
+        await  applicationDbContext.SaveChangesAsync();
+      }
+      catch (Exception e)
+      {
+        throw;
+      }
+      return customer;
+    }
+
+    public async Task<Customer> EditCustomerAsync(Customer customer)
     {
       try
       {
@@ -49,7 +63,7 @@ namespace AutomateWarehouse.Data
       catch (Exception)
       {
         throw;
-      }     
+      }
       return customer;
     }
   }
