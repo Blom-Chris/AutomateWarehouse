@@ -71,5 +71,10 @@ namespace AutomateWarehouse.Data
     {
       return await applicationDbContext.Orders.Where(o => o.Dispatched == true).Where(p => p.CustomerId == customer.Id).ToListAsync();
     }
+
+    public async Task<List<Order>> ShowActiveOrdersByCustomer(Customer customer)
+    {
+      return await applicationDbContext.Orders.Where(o => o.Dispatched == false).Where(p => p.CustomerId == customer.Id).ToListAsync();
+    }
   }
 }

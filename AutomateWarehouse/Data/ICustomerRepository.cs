@@ -11,6 +11,7 @@ namespace AutomateWarehouse.Data
     Task<Customer> AddCustomerAsync(Customer customer);
     Task<Customer> DeleteCustomerAsync(Customer customer);
     Task<Customer> EditCustomerAsync(Customer customer);
-
+    Task<List<Order>> ShowDispatchedOrdersByCustomer(Customer customer);
+    Task<List<Order>> ShowActiveOrdersByCustomer(Customer customer);
   }
 }
