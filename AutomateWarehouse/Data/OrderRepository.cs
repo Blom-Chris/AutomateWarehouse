@@ -27,7 +27,7 @@ namespace AutomateWarehouse.Data
                 applicationDbContext.Orders.Add(order);
                 await applicationDbContext.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw;
             }

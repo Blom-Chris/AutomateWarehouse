@@ -18,5 +18,20 @@ namespace AutomateWarehouse.Data
         {
             return await applicationDbContext.OrderLines.ToListAsync();
         }
+
+        public async Task<OrderLine> AddNewOrderLineAsync(OrderLine orderLine)
+        {
+            try
+            {
+                applicationDbContext.OrderLines.Add(orderLine);
+                await applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            return orderLine;
+        }
+
     }
 }

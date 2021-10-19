@@ -1,6 +1,10 @@
 ﻿@page "/allOrders"
 @using AutomateWarehouse.Data
 @inject OrderRepository orderRepo
+@inject CustomerRepository custRepo
+@inject ProductRepository prodRepo
+@inject OrderLineRepository orderLineRepo
+
 
 <h3>All orders</h3>
 
@@ -51,61 +55,75 @@
 <div class="row m-5">
     <div class="col-5 bg-light m-2 justify-content-start">
         <div class="p-3 mb-3 bg-primary text-white text-center">
-            Add new Order
+            Create new Order
         </div>
         <EditForm Model="@newOrder" OnValidSubmit="@AddNewOrder">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="form-group">
                 @*Binder respektive värde nedanför till objektet newOrder*@
-                <select type="text" id="dept" class="form-control custom-select picker">
-                    <option value="">Customer</option>
-                    <option value="1">Book title</option>
-                </select>
-                <br>
-                <label for="name">Address</label>
-                <input type="type" id="Address" class="form-control" @*@bind-value="@newOrder.Address" *@ />
-                <br>
-                <select type="text" id="dept" class="form-control custom-select picker">
-                    <option value="">Product</option>
-                    <option value="1">Book title</option>
-                </select>
-                <br>
-                <button class="btn btn-info"> + </button>
-                <button class="btn btn-info"> - </button>
-                <br>
-                <div class="text-center p-3 mb-3">
-                    <button class="btn btn-info" type="submit">Add Order</button>
+                <div class="form-group">
+                    <label for="dept">Products</label>
+                    <select type="type" id="prod" class="form-control select-picker" @bind="@newOrderLine.ProductId">
+                        <option value="">Pick product</option>
+                        @foreach (var prod in products)
+                        {
+                            <option value="@prod.Id">@prod.Name</option>
+                        }
+                    </select>
                 </div>
-            </div>
-        </EditForm>
-    </div>
-</div>
 
-<div class="row m-5">
-    <div class="col-5 bg-light m-2 justify-content-start">
-        <div class="p-3 mb-3 bg-primary text-white text-center">
-            Edit Order
-        </div>
-        <EditForm Model="@updateOrder" OnValidSubmit="(() => EditOrder())">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+                <label for="quant">Quantity</label>
+                <input type="type" id="quant" class="form-control" @bind-value="@newOrderLine.Quantity" />
+
+                <div class="text-center p-3 mb-3">
+                    <button class="btn btn-info" type="submit" @*@onclick="(() => AddNewOrder())" *@>Add product</button>
+                </div>
+
+
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (orderLines.Any())
+                        {
+                            @foreach (var ordLin in orderLines)
+                            {
+                                <tr>
+                                    <td>@ordLin.Product.Name</td>
+                                    <td>@ordLin.Quantity</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
             <div class="form-group">
-                @*Binder respektive värde nedanför till objektet updateOrder*@
-                <label for="name">Name</label>
-                <input type="type" id="name" class="form-control" @*@bind-value="@newOrder.Name"*@ />
+                <label for="dept">Customer</label>
+                <select type="type" id="cust" class="form-control select-picker" @bind="@newOrder.CustomerId">
+                    <option value="">Pick customer</option>
+                    @foreach (var cust in customers)
+                    {
+                        <option value="@cust.Id">@cust.Name</option>
+                    }
+                </select>
             </div>
 
+            <label for="name">Address</label>
+            <input type="type" id="Address" class="form-control" @bind-value="@newOrder.DeliveryAddress" />
+            <br>
             <div class="text-center p-3 mb-3">
-                <button class="btn btn-info" type="submit">Edit Order</button>
+                <button class="btn btn-info" type="submit" @onclick="(() => AddNewOrder())">Create Order</button>
             </div>
+
         </EditForm>
     </div>
 </div>
-
-
-
-
 
 
 
@@ -191,26 +209,37 @@
     private List<Order> orders;
     private List<Order> ordersDispatched = new List<Order>();
     private List<Order> ordersPending = new List<Order>();
+    private List<OrderLine> orderLines = new List<OrderLine>();
+    private List<Customer> customers;
+    private List<Product> products;
 
     Order newOrder = new Order();
     Order updateOrder = new Order();
     bool checkedValue = false;
 
+    OrderLine newOrderLine = new OrderLine();
+
     protected override async Task OnInitializedAsync()
     {
         orders = await orderRepo.GetAllOrdersAsync();
+        customers = await custRepo.GetCustomerAsync();
+        products = await prodRepo.GetAllProductsAsync();
     }
 
     private async Task AddNewOrder()
     {
+        newOrder.OrderDate = DateTime.Now;
+
         await orderRepo.AddNewOrderAsync(newOrder);
         await UpdateGUI();
     }
 
-    private async Task EditOrder()
-        {
+    private async Task AddNewOrderLine()
+    {
+        await orderLineRepo.AddNewOrderLineAsync(newOrderLine);
 
-        }
+
+    }
 
 
     private async Task PayOrderAsync(Order order)
