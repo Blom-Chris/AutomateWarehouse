@@ -7,5 +7,16 @@ namespace AutomateWarehouse.Data
 {
   interface IProductRepository
   {
-  }
+        int Id { get; set; }
+        
+        string Name { get; set; }
+        
+        string Description { get; set; }
+        double Price { get; set; }
+        int Stock { get; set; }
+        DateTime RestockingDate { get; set; }
+        
+       
+
+    }
 }
