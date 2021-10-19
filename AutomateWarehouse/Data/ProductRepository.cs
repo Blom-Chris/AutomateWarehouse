@@ -6,44 +6,84 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutomateWarehouse.Data
 {
-  public class ProductRepository
+  public class ProductRepository : IProductRepository
     {
-        private ApplicationDbContext applicationDbContext { get; set; }
-        List<Product> productList { get; set; }
+        private readonly ApplicationDbContext applicationDbContext;
+        //List<Product> productList { get; set; }
 
         public ProductRepository(ApplicationDbContext context)
         {
             applicationDbContext = context;
-            productList = new List<Product>();
+            //productList = new List<Product>();
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
             return await applicationDbContext.Products.ToListAsync();
         }
-        
-        public void AddProducts(Product p)
+        public async Task<Product> AddProductAsync(Product p)
         {
-            productList.Add(p);
+            try
+            {
+                applicationDbContext.Products.Add(p);
+                await applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            return p;
         }
-        public void RemoveProducts(Product p)
+
+        public async Task<Product> RemoveProductAsync(Product p)
         {
-            productList.Remove(p);
+            try
+            {
+                applicationDbContext.Remove(p);
+                await applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            return p;
         }
-        Product updatedProduct = new Product();
-        private void SetProductForUpdates(Product selected)
+
+        public async Task<Product> EditProductsAsync(Product product)
         {
-            updatedProduct = selected;
+            try
+            {
+                Product dbEntry = applicationDbContext.Products.FirstOrDefault(a => a.Id == product.Id);
+                if (dbEntry != null)
+                {
+                    dbEntry.Name = product.Name;
+                    dbEntry.Description = product.Description;
+                    dbEntry.Price = product.Price;
+                    dbEntry.Stock = product.Stock;
+                    dbEntry.RestockingDate = product.RestockingDate;
+                    applicationDbContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return product;
         }
-        private void UpdateProduct()
-        {
-            //catalogueService.UpdateProduct(updatedProduct);
-        }
+
+        //private void SetProductForUpdates(Product selected)
+        //{
+        //    updatedProduct = selected;
+        //}
+        //private void UpdateProduct()
+        //{
+        //    //catalogueService.UpdateProduct(updatedProduct);
+        //}
         public async Task<List<Product>> EmptyStock()
         {
             IEnumerable<Product> result = applicationDbContext.Products.Where(a => a.Stock < 1);
             return result.ToList();
         }
-       
+
     }
 }
