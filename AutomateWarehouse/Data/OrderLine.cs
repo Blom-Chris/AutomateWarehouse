@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace AutomateWarehouse.Data
 {
@@ -12,6 +13,21 @@ namespace AutomateWarehouse.Data
     public Product Product { get; set; }
     public int OrderId { get; set; }
     public Order Order { get; set; }
-    public int Quantity { get; set; }
-  }
+
+        [Required]
+        [Range(0, 9999)]
+
+        private int _quantity;
+        public int Quantity
+        {
+            get
+            {
+                return _quantity;
+            }
+            set
+            {
+                _quantity = value;
+            }
+        }
+    }
 }
