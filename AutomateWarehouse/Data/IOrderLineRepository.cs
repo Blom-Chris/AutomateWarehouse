@@ -7,5 +7,6 @@ namespace AutomateWarehouse.Data
 {
     interface IOrderLineRepository
     {
+        Task<List<OrderLine>> GetCurrentOrderLinesAsync(Order order);
     }
 }

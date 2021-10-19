@@ -1,9 +1,14 @@
 ﻿@page "/allOrders"
 @using AutomateWarehouse.Data
-@inject OrderRepository orderRepo
+@*@inject OrderRepository orderRepo
 @inject OrderLineRepository orderLineRepo
 @inject ProductRepository productRepo
-@inject CustomerRepository customerRepo 
+@inject CustomerRepository customerRepo*@
+@inject IOrderRepository orderRepo
+@inject IOrderLineRepository orderLineRepo
+@inject IProductRepository productRepo
+@inject ICustomerRepository customerRepo
+
 
 <h3>All orders</h3>
 
@@ -57,7 +62,7 @@
 
                                                 <thead class="thead-dark">
                                                     <tr>
-                                                        <th>Id</th>
+                                                        <th>Order line Id</th>
                                                         <th>Product Id</th>
                                                         <th>Product name</th>
                                                         <th>Quantity</th>
