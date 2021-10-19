@@ -44,50 +44,48 @@
                     <tr>
                         @if (orderLines != null)
                         {
-                        <td colspan="8">
+
                             @if (orderLines.Any())
                             {
-
-                                @foreach (var orderLine in orderLines)
-                                {
-                                    @if (order.Id == orderLine.OrderId)
+                                <td colspan="8">
+                                    @foreach (var orderLine in orderLines)
                                     {
-                                        <p>Order lines</p>
-                                        <table class="table table-bordered">
+                                        @if (order.Id == orderLine.OrderId)
+                                        {
+                                            <p>Order lines</p>
+                                            <table class="table table-bordered">
 
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Product Id</th>
-                                                    <th>Product name</th>
-                                                    <th>Quantity</th>
-                                                    <th>Order Id</th>
-                                                    <th>Customer name</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@orderLine.Id</td>
-                                                    <td>@orderLine.ProductId</td>
-                                                    <td>@orderLine.Product.Name</td>
-                                                    <td>@orderLine.Quantity</td>
-                                                    <td>@orderLine.OrderId</td>
-                                                    <td>@orderLine.Order.Customer.Name</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Product Id</th>
+                                                        <th>Product name</th>
+                                                        <th>Quantity</th>
+                                                        <th>Order Id</th>
+                                                        <th>Customer name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>@orderLine.Id</td>
+                                                        <td>@orderLine.ProductId</td>
+                                                        <td>@orderLine.Product.Name</td>
+                                                        <td>@orderLine.Quantity</td>
+                                                        <td>@orderLine.OrderId</td>
+                                                        <td>@orderLine.Order.Customer.Name</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        }
                                     }
-                                    else if (!orderLines.Any() && (currentOrder.Id == orderLine.OrderId))
-                                    {
-                                        <p>No order lines found</p>
-                                    }
-                                }
+                                </td>
                             }
-                            else
+                            else if (currentOrder.Id == order.Id)
                             {
-                                <p>No order lines found</p>
+                                <td colspan="8" align="center">
+                                    <p>No order lines found</p>
+                                </td>
                             }
-                        </td>
                         }
                     </tr>
                 }
