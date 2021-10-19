@@ -32,6 +32,7 @@ namespace AutomateWarehouse
             services.AddScoped<ProductRepository>();
             services.AddScoped<CustomerRepository>();
             services.AddScoped<OrderLineRepository>();
+            services.AddScoped<OrderRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
       {
