@@ -5,59 +5,93 @@
 <h3>Products</h3>
 
 <div class="container">
+    <div class="row m-2">
+
+        <div class="col-5.5 bg-light m-2 justify-content-start">
+            <div class="p-3 mb-3 bg-secondary text-white text-center">
+                Add new Customer
+            </div>
+            <EditForm Model="@newProduct" OnValidSubmit="@AddNewProduct">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="p-3 mb-3 bg-primary text-white text-center">
+                    <div class="form-group">
+                        <label for="name">Product name </label>
+                        <input @bind-value="@newProduct.Name" type="text" />
+                    </div>
+                    <div class="form-group ">
+                        <label for="description">
+                            Description
+                        </label>
+                        <input @bind-value="@newProduct.Description" type="text" />
+                    </div>
+                    <div class="form-group ">
+                        <label for="price">
+                            Price
+                        </label>
+                        <input @bind-value="@newProduct.Price" type="number" />
+                    </div>
+                    <div class="form-group ">
+                        <label for="stock">
+                            Stock
+                        </label>
+                        <input @bind-value="@newProduct.Stock" type="number" />
+                    </div>
+                    <button class="btn btn-info" type="submit">
+                        Add Product
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+        <div class="col-5.5 bg-light m-2 justify-content-start">
+            <EditForm Model="@updateProduct" OnValidSubmit="(() => EditProduct())">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="p-3 mb-3 bg-secondary text-white text-center">
+                    Edit Customer
+                </div>
+                <div class="p-3 mb-3 bg-secondary text-white text-center">
+                    <div class="form-group ">
+                        <label for="name">Product name </label>
+                        <input @bind-value="@updateProduct.Name" type="text" />
+                    </div>
+                    <div class="form-group ">
+                        <label for="description">
+                            Description
+                        </label>
+                        <input id="name" @bind-value="@updateProduct.Description" type="text" />
+                    </div>
+                    <div class="form-group ">
+                        <label for="price">
+                            Price
+                        </label>
+                        <input id="name" @bind-value="@updateProduct.Price" type="number" />
+                    </div>
+                    <div class="form-group ">
+                        <label for="stock">
+                            Stock
+                        </label>
+                        <input id="name" @bind-value="@updateProduct.Stock" type="number" />
+                    </div>
+                    <button class="btn btn-info" type="submit">
+                        Update Product
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+
+    </div>
     <div>
         <select type="text" id="dept" class="form-control select-picker"
                 @bind="@FilterFunction">
             <option value="">Pick a function... </option>
-            <option value="1">Show all products </option>
-            <option value="2">Add products </option>
-            <option value="3">Remove products </option>
-            <option value="4">Update product </option>
-            <option value="5">Show out-of-stock products </option>
+            <option value="1">Show all Products </option>
+            <option value="2">Out-of-stock Products </option>
         </select>
-
         <button class="btn btn-info" type="button"
                 @onclick="FilterGUI">
-            OK
+            Filter
         </button>
-    </div>
-    <div>
-        <EditForm Model="@newProduct" OnValidSubmit="(() => productRepository.AddProducts(newProduct))">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="row m-5">
-                <div class="col-5 bg-light m-2 justify-content-start">
-                    <div class="p-3 mb-3 bg-primary text-white text-center">
-                        <div class="form-group">
-                            <label for=" name ">Product name </label>
-                            <input @bind-value="@newProduct.Name" type="text" />
-                        </div>
-                        <div class="form-group ">
-                            <label for="description">
-                                Description
-                            </label>
-                            <input @bind-value="@newProduct.Description" type="text" />
-                        </div>
-                        <div class="form-group ">
-                            <label for="price">
-                                Price
-                            </label>
-                            <input @bind-value="@newProduct.Price" type="number" />
-                        </div>
-                        <div class="form-group ">
-                            <label for="stock">
-                                Stock
-                            </label>
-                            <input @bind-value="@newProduct.Stock" type="number" />
-                        </div>
-                        <button class="btn btn-info" type="submit">
-                            Add Product
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </EditForm>
-
     </div>
     <table class="table">
         <thead>
@@ -68,12 +102,14 @@
                 <th>Price</th>
                 <th>Stock</th>
                 <th>Restocking date</th>
+                <th>Edit Product</th>
+                <th>Delete Product</th>
             </tr>
         </thead>
         <tbody>
-            @if (Productss.Any())
+            @if (ProductsList.Any())
             {
-                @foreach (var prod in Productss)
+                @foreach (var prod in ProductsList)
                 {
                     <tr>
                         <td>@prod.Id</td>
@@ -82,23 +118,58 @@
                         <td>@prod.Price</td>
                         <td>@prod.Stock</td>
                         <td>@prod.RestockingDate</td>
+                        <td><button class="btn btn-info" @onclick="(() => SetProductForUpdate( prod ))">Edit</button></td>
+                        <td><button class="btn btn-danger" @onclick="(() => DeleteProduct(prod))">Delete</button></td>
+
                     </tr>
                 }
             }
         </tbody>
     </table>
+
 </div>
 
 @code {
-    private List<Product> Productss;
-    public string Filter { get; set; }
+    private List<Product> ProductsList;
+    //public string Filter { get; set; }
     public string FilterFunction { get; set; }
     Product newProduct = new Product();
+    Product updateProduct = new Product();
 
 
     protected override async Task OnInitializedAsync()
     {
-        Productss = await productRepository.GetAllProductsAsync();
+        ProductsList = await productRepository.GetAllProductsAsync();
+    }
+    private async Task AddNewProduct()
+    {
+        await productRepository.AddProductAsync(newProduct);
+        newProduct = new Product();
+        await UpdateGUI();
+    }
+
+    //Delete a customer by calling method in repository.
+    private async Task DeleteProduct(Product p)
+    {
+        await productRepository.RemoveProductAsync(p);
+        await UpdateGUI();
+    }
+    //To update the GUI by fetching from database async.
+    private async Task UpdateGUI()
+    {
+        ProductsList = await productRepository.GetAllProductsAsync();
+    }
+    Product updatedProduct = new Product();
+
+    private void SetProductForUpdate(Product selected)
+    {
+        updatedProduct = selected;
+    }
+    private async Task EditProduct()
+    {
+        await productRepository.EditProductsAsync(updateProduct);
+        updateProduct = new Product();
+        await UpdateGUI();
     }
     private async void FilterGUI()
     {
@@ -106,24 +177,12 @@
         {
             case "1":
 
-                Productss = await productRepository.GetAllProductsAsync();
+                ProductsList = await productRepository.GetAllProductsAsync();
                 break;
-            //case "2":
 
-            //    Productss = await productRepository.AddProducts();
-            //    break;
-            //case "3":
+            case "2":
 
-            //    Productss = await productRepository.RemoveProducts();
-            //    break;
-            //case "4":
-
-            //    Productss = await productRepository.UpdateProduct();
-            //    break;
-
-            case "5":
-
-                Productss = await productRepository.EmptyStock();
+                ProductsList = await productRepository.EmptyStock();
                 break;
         }
     }

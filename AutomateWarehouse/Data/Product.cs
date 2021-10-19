@@ -6,12 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AutomateWarehouse.Data
 {
-  public class Product : IProductRepository
+  public class Product
     {
-    public Product() 
-    {
-
-    }
+    
     public int Id { get; set; }
     private string _name;
     private double _price;
@@ -27,8 +24,23 @@ namespace AutomateWarehouse.Data
     [Required]
     [Range(1, 9999)]
     public double Price { get { return _price; } set { _price = value; } }
-    public int Stock { get; set; }
-    public DateTime RestockingDate { get; set; }
+    [Required]
+    [Range(0, 9999)]
+        public int Stock { get; set; }
+        public DateTime _dateTime = DateTime.Today;
+    public DateTime RestockingDate {
+            get
+            {
+                return _dateTime;
+            }
+            set {
+                if (Stock == 0)
+                {
+                    _dateTime =_dateTime.AddDays(10);
+                }
+                
+            }
+             }
   }
 
 }
