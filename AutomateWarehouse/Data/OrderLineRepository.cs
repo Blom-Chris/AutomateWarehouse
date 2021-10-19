@@ -20,7 +20,6 @@ namespace AutomateWarehouse.Data
             return await applicationDbContext.OrderLines.ToListAsync();
         }
 
-
         public async Task<List<OrderLine>> GetCurrentOrderLinesAsync(Order currentOrder)
         {
             return await applicationDbContext.OrderLines.Where(o => o.OrderId == currentOrder.Id).ToListAsync();

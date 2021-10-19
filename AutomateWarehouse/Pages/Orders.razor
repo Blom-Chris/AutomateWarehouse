@@ -37,8 +37,7 @@
                         <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
                         <td><button class="btn btn-info">Edit</button></td>
                         <td>
-                            <input type="checkbox" onchange="document.getElementById('PayButton').disabled = !this.checked;" />
-                            <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="PayButton" disabled @onclick="(() => PayOrderAsync(order))" />
+                            <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
                         </td>
                     </tr>
 
@@ -93,6 +92,8 @@
             }
         </tbody>
     </table>
+
+    <button class="btn btn-info" @onclick="(() => GetAllDispatchedOrdersAsync())">Show all orders</button>
 
     <button class="btn btn-info" @onclick="(() => GetAllDispatchedOrdersAsync())">Show all dispatched orders</button>
 
@@ -259,7 +260,7 @@
     private List<Product> products;
 
     private Order currentOrder = new Order();
-    private List<OrderLine> orderLines;
+    //private List<OrderLine> orderLines;
     private List<Product> ListOfProducts;
     private List<Customer> ListOfCustomers;
 
@@ -272,8 +273,8 @@
     protected override async Task OnInitializedAsync()
     {
         orders = await orderRepo.GetAllOrdersAsync();
-        customers = await custRepo.GetCustomerAsync();
-        products = await prodRepo.GetAllProductsAsync();
+        customers = await customerRepo.GetCustomerAsync();
+        products = await productRepo.GetAllProductsAsync();
     }
 
     private async Task AddNewOrder()
