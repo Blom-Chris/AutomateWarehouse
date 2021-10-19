@@ -27,7 +27,7 @@
             <td>@cust.Name</td>
             <td>@cust.Phone</td>
             <td>@cust.Email</td>
-            <td><button class="btn btn-info" @onclick="(() => SetCustomerForDispatchedOrders ( cust ))">Dispatched orderse </button></td>
+            <td><button class="btn btn-info" @onclick="(() => SetCustomerForDispatchedOrders ( cust ))">Dispatched orders </button></td>
             <td><button class="btn btn-info" @onclick="(() => SetCustomerForActiveOrders ( cust ))">Active orders</button></td>
             <td><button class="btn btn-danger" @onclick="(() => DeleteCustomer(cust))">Delete</button></td>
             <td><button class="btn btn-info" @onclick="(() => SetCustomerForEdit ( cust ))">Edit</button></td>
@@ -81,8 +81,15 @@
                         </tbody>
                       </table>
                     }
+
                   }
+
                 </td>
+              }
+              else if (DispatchedCustomer.Id == cust.Id)
+              {
+                <td colspan="7" align="center"><p>No dispatched orders found</p></td>
+
               }
             }
 
@@ -93,55 +100,59 @@
             {
               @if (activeOrders.Any())
               {
-            <td colspan="7">
-              @foreach (var order in activeOrders)
-              {
-                @if (cust.Id == order.CustomerId)
-                {
-                  <p>Active orders</p>
-                  <table class="table table-bordered">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th>OrderDate</th>
-                        <th>Delivery Address</th>
-                        <th>Payment done</th>
-                        <th>Dispatched</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>@order.OrderDate</td>
-                        <td>@order.DeliveryAddress</td>
-                        <td>
-                          @if (order.PaymentCompleted == true)
-                          {
-                            <p>Paid</p>
-                          }
-                          else
-                          {
-                            <p>Not paid</p>
-                          }
-                        </td>
-                        <td>
-                          @if (@order.Dispatched == true)
-                          {
-                            <p>Dispatched</p>
-                          }
-                          else
-                          {
-                            <p>Not dispatched</p>
-                          }
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                }
+                <td colspan="7">
+                  @foreach (var order in activeOrders)
+                  {
+                    @if (cust.Id == order.CustomerId)
+                    {
+                      <p>Active orders</p>
+                      <table class="table table-bordered">
+                        <thead class="thead-dark">
+                          <tr>
+                            <th>OrderDate</th>
+                            <th>Delivery Address</th>
+                            <th>Payment done</th>
+                            <th>Dispatched</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>@order.OrderDate</td>
+                            <td>@order.DeliveryAddress</td>
+                            <td>
+                              @if (order.PaymentCompleted == true)
+                              {
+                                <p>Paid</p>
+                              }
+                              else
+                              {
+                                <p>Not paid</p>
+                              }
+                            </td>
+                            <td>
+                              @if (@order.Dispatched == true)
+                              {
+                                <p>Dispatched</p>
+                              }
+                              else
+                              {
+                                <p>Not dispatched</p>
+                              }
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    }
+                  }
+                </td>
               }
-            </td>
-                  }
-                  }
-             
-              </tr>
+              else if (ActiveCustomer.Id == cust.Id)
+              {
+                <td colspan="7" align="center"><p>No active orders found</p></td>                
+              }
+            }
+
+          </tr>
         }
       }
     </tbody>
@@ -255,10 +266,9 @@
       {
         activeOrders.Clear();
       }
-
+      ActiveCustomer = new Customer();
       DispatchedCustomer = selected;
       dispatchedOrders = await customerRepo.ShowDispatchedOrdersByCustomer(DispatchedCustomer);
-      DispatchedCustomer = new Customer();
       await UpdateGUI();
     }
 
@@ -268,10 +278,9 @@
       {
         dispatchedOrders.Clear();
       }
-
+      DispatchedCustomer = new Customer();
       ActiveCustomer = selected;
       activeOrders = await customerRepo.ShowActiveOrdersByCustomer(ActiveCustomer);
-      ActiveCustomer = new Customer();
       await UpdateGUI();
     }
 
