@@ -14,24 +14,16 @@ namespace AutomateWarehouse.Data
             applicationDbContext = context;
         }
 
+        //Behövs inte
         public async Task<List<OrderLine>> GetAllOrderLinesAsync()
         {
             return await applicationDbContext.OrderLines.ToListAsync();
         }
 
-        public async Task<OrderLine> AddNewOrderLineAsync(OrderLine orderLine)
-        {
-            try
-            {
-                applicationDbContext.OrderLines.Add(orderLine);
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
-            return orderLine;
-        }
 
+        public async Task<List<OrderLine>> GetCurrentOrderLinesAsync(Order currentOrder)
+        {
+            return await applicationDbContext.OrderLines.Where(o => o.OrderId == currentOrder.Id).ToListAsync();
+        }
     }
 }
