@@ -1,6 +1,9 @@
 ﻿@page "/allOrders"
 @using AutomateWarehouse.Data
 @inject OrderRepository orderRepo
+@inject OrderLineRepository orderLineRepo
+@inject ProductRepository productRepo
+@inject CustomerRepository customerRepo 
 
 <h3>All orders</h3>
 
@@ -14,6 +17,7 @@
                 <th>Delivery address</th>
                 <th>Payment completed</th>
                 <th>Order dispatched</th>
+                <th>Order lines</th>
                 <th>Edit order</th>
                 <th>Pay order</th>
             </tr>
@@ -21,19 +25,70 @@
         <tbody>
             @if (orders.Any())
             {
-                @foreach (var orde in orders)
+                @foreach (var order in orders)
                 {
                     <tr>
-                        <td>@orde.CustomerId</td>
-                        <td>@orde.OrderDate</td>
-                        <td>@orde.DeliveryAddress</td>
-                        <td>@orde.PaymentCompleted</td>
-                        <td>@orde.Dispatched</td>
+                        <td>@order.CustomerId</td>
+                        <td>@order.OrderDate</td>
+                        <td>@order.DeliveryAddress</td>
+                        <td>@order.PaymentCompleted</td>
+                        <td>@order.Dispatched</td>
+                        <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
                         <td><button class="btn btn-info">Edit</button></td>
                         <td>
                             <input type="checkbox" onchange="document.getElementById('PayButton').disabled = !this.checked;" />
-                            <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="PayButton" disabled @onclick="(() => PayOrderAsync(orde))" />
+                            <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="PayButton" disabled @onclick="(() => PayOrderAsync(order))" />
                         </td>
+                    </tr>
+
+                    <tr>
+                        @if (orderLines != null)
+                        {
+                        <td colspan="8">
+                            @if (orderLines.Any())
+                            {
+
+                                @foreach (var orderLine in orderLines)
+                                {
+                                    @if (order.Id == orderLine.OrderId)
+                                    {
+                                        <p>Order lines</p>
+                                        <table class="table table-bordered">
+
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Product Id</th>
+                                                    <th>Product name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Order Id</th>
+                                                    <th>Customer name</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>@orderLine.Id</td>
+                                                    <td>@orderLine.ProductId</td>
+                                                    <td>@orderLine.Product.Name</td>
+                                                    <td>@orderLine.Quantity</td>
+                                                    <td>@orderLine.OrderId</td>
+                                                    <td>@orderLine.Order.Customer.Name</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else if (!orderLines.Any() && (currentOrder.Id == orderLine.OrderId))
+                                    {
+                                        <p>No order lines found</p>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <p>No order lines found</p>
+                            }
+                        </td>
+                        }
                     </tr>
                 }
             }
@@ -93,7 +148,7 @@
             <div class="form-group">
                 @*Binder respektive värde nedanför till objektet updateOrder*@
                 <label for="name">Name</label>
-                <input type="type" id="name" class="form-control" @*@bind-value="@newOrder.Name"*@ />
+                <input type="type" id="name" class="form-control" @*@bind-value="@newOrder.Name" *@ />
             </div>
 
             <div class="text-center p-3 mb-3">
@@ -192,6 +247,11 @@
     private List<Order> ordersDispatched = new List<Order>();
     private List<Order> ordersPending = new List<Order>();
 
+    private Order currentOrder = new Order();
+    private List<OrderLine> orderLines;
+    private List<Product> ListOfProducts;
+    private List<Customer> ListOfCustomers;
+
     Order newOrder = new Order();
     Order updateOrder = new Order();
     bool checkedValue = false;
@@ -208,9 +268,9 @@
     }
 
     private async Task EditOrder()
-        {
+    {
 
-        }
+    }
 
 
     private async Task PayOrderAsync(Order order)
@@ -233,4 +293,16 @@
     {
         orders = await orderRepo.GetAllOrdersAsync();
     }
+
+
+    private async Task ShowAllOrderLines(Order selectedOrder)
+    {
+        currentOrder = selectedOrder;
+        orderLines = await orderLineRepo.GetCurrentOrderLinesAsync(currentOrder);
+        ListOfProducts = await productRepo.GetAllProductsAsync();
+        ListOfCustomers = await customerRepo.GetCustomerAsync();
+        //await UpdateGUI();
+    }
+
+
 }
