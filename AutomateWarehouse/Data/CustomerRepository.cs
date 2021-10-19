@@ -51,7 +51,7 @@ namespace AutomateWarehouse.Data
     {
       try
       {
-        Customer dbEntry = applicationDbContext.Customers.FirstOrDefault(c => c.Name == customer.Name);
+        Customer dbEntry = applicationDbContext.Customers.FirstOrDefault(c => c.Id == customer.Id);
         if (dbEntry != null)
         {
           dbEntry.Name = customer.Name;
@@ -65,6 +65,11 @@ namespace AutomateWarehouse.Data
         throw;
       }
       return customer;
+    }
+
+    public async Task<List<Order>> ShowDispatchedOrdersByCustomer(Customer customer)
+    {
+      return await applicationDbContext.Orders.Where(o => o.Dispatched == true).Where(p => p.CustomerId == customer.Id).ToListAsync();
     }
   }
 }
