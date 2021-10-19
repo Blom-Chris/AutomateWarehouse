@@ -90,13 +90,41 @@
       </EditForm>
     </div>
   </div>
+
+  <table class="table table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th>OrderDate</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Delete Customer</th>
+        <th>Edit Customer</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (customers.Any())
+      {
+        @foreach (var cust in customers)
+        {
+          <tr>
+            <td>@cust.Name</td>
+            <td>@cust.Phone</td>
+            <td>@cust.Email</td>
+            <td><button class="btn btn-danger" @onclick="(() => DeleteCustomer(cust))">Delete</button></td>
+            <td><button class="btn btn-info" @onclick="(() => SetCustomerForEdit ( cust ))">Edit</button></td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+
 </div> 
 
   @code {
     private List<Customer> customers;
+    private List<Order> orders;
     Customer NewCustomer = new Customer();
     Customer UpdateCustomer = new Customer();
-    //Customer UpdatedCustomer = new Customer();
 
     protected override async Task OnInitializedAsync()
     {
