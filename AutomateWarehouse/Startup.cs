@@ -30,7 +30,6 @@ namespace AutomateWarehouse
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<ProductRepository>();
-            services.AddScoped<CustomerRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
       {
