@@ -40,53 +40,59 @@
             {
               @if (dispatchedOrders.Any())
               {
-                <td colspan="7">
-                  @foreach (var order in dispatchedOrders)
-                  {
-                    @if (cust.Id == order.CustomerId)
-                    {
-                      <p>Dispatched orders</p>
-                      <table class="table table-bordered">
-                        <thead class="thead-dark">
-                          <tr>
-                            <th>OrderDate</th>
-                            <th>Delivery Address</th>
-                            <th>Payment done</th>
-                            <th>Dispatched</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>@order.OrderDate</td>
-                            <td>@order.DeliveryAddress</td>
-                            <td>
-                              @if (order.PaymentCompleted == true)
-                              {
-                                <p>Paid</p>
-                              }
-                              else
-                              {
-                                <p>Not paid</p>
-                              }
-                            </td>
-                            <td>
-                              @if (order.Dispatched == true)
-                              {
-                                <p>Dispatched</p>
-                              }
-                              else
-                              {
-                                <p>Not dispatched</p>
-                              }
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    }
+            <td colspan="7">
 
+              @foreach (var order in dispatchedOrders)
+              {
+                @if (cust.Id == order.CustomerId)
+                {
+                  @count++;
+                  @if (count > 0)
+                  {
+                    <p>Dispatched orders</p>
                   }
 
-                </td>
+                  <table class="table table-bordered">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>OrderDate</th>
+                        <th>Delivery Address</th>
+                        <th>Payment done</th>
+                        <th>Dispatched</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>@order.OrderDate</td>
+                        <td>@order.DeliveryAddress</td>
+                        <td>
+                          @if (order.PaymentCompleted == true)
+                          {
+                            <p>Paid</p>
+                          }
+                          else
+                          {
+                            <p>Not paid</p>
+                          }
+                        </td>
+                        <td>
+                          @if (order.Dispatched == true)
+                          {
+                            <p>Dispatched</p>
+                          }
+                          else
+                          {
+                            <p>Not dispatched</p>
+                          }
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                }
+
+              }
+
+            </td>
               }
               else if (DispatchedCustomer.Id == cust.Id)
               {
@@ -233,82 +239,83 @@ else
 }
 
 @code {
-  private List<Customer> customers;
-  private List<Order> dispatchedOrders;
-  private List<Order> activeOrders;
-  private bool loadFailed;
-  Customer NewCustomer = new Customer();
-  Customer UpdateCustomer = new Customer();
-  Customer DispatchedCustomer = new Customer();
-  Customer ActiveCustomer = new Customer();
+      int count = 0;
+      private List<Customer> customers;
+      private List<Order> dispatchedOrders;
+      private List<Order> activeOrders;
+      private bool loadFailed;
+      Customer NewCustomer = new Customer();
+      Customer UpdateCustomer = new Customer();
+      Customer DispatchedCustomer = new Customer();
+      Customer ActiveCustomer = new Customer();
 
-  protected override async Task OnInitializedAsync()
-  {
-    customers = await customerRepo.GetCustomerAsync();
-  }
+      protected override async Task OnInitializedAsync()
+      {
+        customers = await customerRepo.GetCustomerAsync();
+      }
 
-  //Add a new Cutomer by calling the repository. Create a new object wo erase the old.
-  private async Task AddNewCustomer()
-  {
-    try
-    {
-      loadFailed = false;
-      await customerRepo.AddCustomerAsync(NewCustomer);
-      NewCustomer = new Customer();
-      await UpdateGUI();
-    }
-    catch (Exception ex)
-    {
-      loadFailed = true;
-    }
-  }
+      //Add a new Cutomer by calling the repository. Create a new object wo erase the old.
+      private async Task AddNewCustomer()
+      {
+        try
+        {
+          loadFailed = false;
+          await customerRepo.AddCustomerAsync(NewCustomer);
+          NewCustomer = new Customer();
+          await UpdateGUI();
+        }
+        catch (Exception ex)
+        {
+          loadFailed = true;
+        }
+      }
 
-  //Delete a customer by calling method in repository.
-  private async Task DeleteCustomer(Customer customer)
-  {
-    await customerRepo.DeleteCustomerAsync(customer);
-    await UpdateGUI();
-  }
+      //Delete a customer by calling method in repository.
+      private async Task DeleteCustomer(Customer customer)
+      {
+        await customerRepo.DeleteCustomerAsync(customer);
+        await UpdateGUI();
+      }
 
-  private void SetCustomerForEdit(Customer selected)
-  {
-    UpdateCustomer = selected;
-  }
-  //Edit a customer by calling method in repository.
-  private async Task EditCustomer()
-  {
-    await customerRepo.EditCustomerAsync(UpdateCustomer);
-    UpdateCustomer = new Customer();
-    await UpdateGUI();
-  }
+      private void SetCustomerForEdit(Customer selected)
+      {
+        UpdateCustomer = selected;
+      }
+      //Edit a customer by calling method in repository.
+      private async Task EditCustomer()
+      {
+        await customerRepo.EditCustomerAsync(UpdateCustomer);
+        UpdateCustomer = new Customer();
+        await UpdateGUI();
+      }
 
-  public async Task SetCustomerForDispatchedOrders(Customer selected)
-  {
-    if (activeOrders != null)
-    {
-      activeOrders.Clear();
-    }
-    ActiveCustomer = new Customer();
-    DispatchedCustomer = selected;
-    dispatchedOrders = await customerRepo.ShowDispatchedOrdersByCustomer(DispatchedCustomer);
-    await UpdateGUI();
-  }
+      public async Task SetCustomerForDispatchedOrders(Customer selected)
+      {
+        if (activeOrders != null)
+        {
+          activeOrders.Clear();
+        }
+        ActiveCustomer = new Customer();
+        DispatchedCustomer = selected;
+        dispatchedOrders = await customerRepo.ShowDispatchedOrdersByCustomer(DispatchedCustomer);
+        await UpdateGUI();
+      }
 
-  public async Task SetCustomerForActiveOrders(Customer selected)
-  {
-    if (dispatchedOrders != null)
-    {
-      dispatchedOrders.Clear();
-    }
-    DispatchedCustomer = new Customer();
-    ActiveCustomer = selected;
-    activeOrders = await customerRepo.ShowActiveOrdersByCustomer(ActiveCustomer);
-    await UpdateGUI();
-  }
+      public async Task SetCustomerForActiveOrders(Customer selected)
+      {
+        if (dispatchedOrders != null)
+        {
+          dispatchedOrders.Clear();
+        }
+        DispatchedCustomer = new Customer();
+        ActiveCustomer = selected;
+        activeOrders = await customerRepo.ShowActiveOrdersByCustomer(ActiveCustomer);
+        await UpdateGUI();
+      }
 
-  //To update the GUI by fetching from database async.
-  private async Task UpdateGUI()
-  {
-    customers = await customerRepo.GetCustomerAsync();
-  }
+      //To update the GUI by fetching from database async.
+      private async Task UpdateGUI()
+      {
+        customers = await customerRepo.GetCustomerAsync();
+      }
 }
