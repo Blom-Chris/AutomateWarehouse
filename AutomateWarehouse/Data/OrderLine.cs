@@ -20,13 +20,14 @@ namespace AutomateWarehouse.Data
         get { return _id; }
         set { _id = value; }
     }
-
+         
     public int ProductId
     {
         get { return _productId; }
         set { _productId = value; }
     }
 
+    [Required]
     public Product Product 
     {
         get { return _product; }
