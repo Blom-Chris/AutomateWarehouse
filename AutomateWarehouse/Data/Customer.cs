@@ -8,7 +8,20 @@ namespace AutomateWarehouse.Data
 {
   public class Customer
   {
-    public int Id { get; set; }
+    private int _id;
+    [Required]
+    [Range(0,10000000000)]
+    public int Id 
+    {
+      get
+      {
+        return _id;
+      }
+      set
+      {
+        _id = value;
+      }
+    }
 
     private string _name;
     [Required]
@@ -54,6 +67,17 @@ namespace AutomateWarehouse.Data
       }        
     }
 
-    public List<Order> Orders { get; set; } 
+    private List<Order> _order;
+    public List<Order> Orders 
+    { 
+      get
+      {
+        return _order;
+      }
+      set
+      {
+        _order = value;
+      }
+    } 
   }
 }
