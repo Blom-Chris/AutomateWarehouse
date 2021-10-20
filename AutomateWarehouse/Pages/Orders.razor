@@ -1,27 +1,119 @@
 ﻿@page "/allOrders"
 @using AutomateWarehouse.Data
-@*@inject OrderRepository orderRepo
-@inject OrderLineRepository orderLineRepo
-@inject ProductRepository productRepo
-@inject CustomerRepository customerRepo*@
 @inject IOrderRepository orderRepo
 @inject IOrderLineRepository orderLineRepo
 @inject IProductRepository productRepo
 @inject ICustomerRepository customerRepo
 
-
-
 <h3>Orders</h3>
 
 <div class="container">
+
+    <div class="row m-2">
+        <div class="col-5 bg-light m-2 justify-content-start">
+            <div class="p-3 mb-3 bg-secondary text-white text-center">
+                Create new Order
+            </div>
+            <EditForm Model="@newOrder" OnValidSubmit="(() => AddNewOrder())">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    @*Binder respektive värde nedanför till objektet updateOrder*@
+                    <label for="ord">Pick customer</label>
+                    <select type="type" id="ord" class="form-control select-picker" @bind="@newOrder.CustomerId">
+                        @foreach (var cust in customers)
+                        {
+                            <option value="@cust.Id">@cust.Name</option>
+                        }
+                    </select>
+                    <br>
+                    <label for="address">Delivery address</label>
+                    <input type="type" id="address" class="form-control" @bind-value="@newOrder.DeliveryAddress" />
+                    <br>
+                    <button class="btn btn-info" type="submit">
+                        Add Order
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+
+        <div class="col-5 bg-light m-2 justify-content-start">
+            <div class="p-3 mb-3 bg-secondary text-white text-center">
+                Edit Order
+            </div>
+            <EditForm Model="@updateOrder" OnValidSubmit="(() => EditOrder())">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <p>Order Id: @updateOrder.Id</p>
+                    <br>
+                    <label for="deliveryAddress">Delivery address</label>
+                    <input type="type" id="deliveryAddress" class="form-control" @bind-value="@updateOrder.DeliveryAddress" />
+                    <br>
+                    <label for="addOrderLine">Add product to order</label>
+                </div>
+                <div class="text-center p-3 mb-3">
+                    <button class="btn btn-info" type="submit">Edit Order</button>
+                </div>
+                @if (updateOrder.PaymentCompleted)
+                {
+                    <button class="btn btn-info" @onclick="(() => UndoPayment(updateOrder))">Undo payment</button>
+                }
+
+                @if (updateOrder.Dispatched)
+                {
+                    <button class="btn btn-info" @onclick="(() => UndoDispatch(updateOrder))">Undo dispatch</button>
+                }
+            </EditForm>
+        </div>
+
+        <div class="col-5 bg-light m-2 justify-content-start">
+            <div class="p-3 mb-3 bg-secondary text-white text-center">
+                Add products to order
+            </div>
+            <EditForm Model="@newOrderLine" OnValidSubmit="(() => AddNewOrderLine(updateOrder))">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <p>Order Id: @updateOrder.Id</p>
+                    <select type="text" id="prod" class="form-control select-picker" @bind="@newOrderLine.ProductId">
+
+                        <option value="">Choose a product</option>
+                        @foreach (var product in products)
+                        {
+                            <option value="@product.Id"> @product.Name </option>
+                        }
+                    </select>
+                    <br>
+                    <label for="addOrderLine">Choose quantity</label>
+                    <input type="text" id="quantity" class="form-control" @bind-value="@newOrderLine.Quantity" />
+
+                </div>
+                <div class="text-center p-3 mb-3">
+                    <button class="btn btn-info" type="submit">Add product</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+
+    <div align="center">
+        <button class="btn btn-info" @onclick="(() => GetAllOrdersAsync())">Show all orders</button>
+        <button class="btn btn-info" @onclick="(() => GetAllDispatchedOrdersAsync())">Show all dispatched orders</button>
+        <button class="btn btn-info" @onclick="(() => GetAllPendingdOrdersAsync())">Show all pending orders</button>
+        <button class="btn btn-info" @onclick="(() => DispatchAllOrders())">Process all orders</button>
+    </div>
+    
+    <br/>
     <table class="table table-bordered">
         <thead class="thead-dark">
             <tr>
+                <th>Order id</th>
                 <th>Customer id</th>
                 <th>Order date</th>
                 <th>Delivery address</th>
                 <th>Payment completed</th>
                 <th>Order dispatched</th>
+                <th>Add product</th>
                 <th>Order lines</th>
                 <th>Edit order</th>
                 <th>Pay order</th>
@@ -33,6 +125,7 @@
                 @foreach (var order in orders)
                 {
                     <tr>
+                        <td>@order.Id</td>
                         <td>@order.CustomerId</td>
                         <td>@order.OrderDate</td>
                         <td>@order.DeliveryAddress</td>
@@ -56,6 +149,7 @@
                                 <p>Not dispatched</p>
                             }
                         </td>
+                        <td><button class="btn btn-info" @onclick="(() => SetOrderForEdit (order))">Add product</button></td>
                         <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
                         <td><button class="btn btn-info" @onclick="(() => SetOrderForEdit (order))">Edit</button></td>
                         <td>
@@ -66,28 +160,35 @@
                     <tr>
                         @if (orderLines != null)
                         {
-
                             @if (orderLines.Any())
                             {
-                                <td colspan="8">
+                                int counter = 0;
+                                <td colspan="10">
                                     @foreach (var orderLine in orderLines)
                                     {
-                                        @if (order.Id == orderLine.OrderId)
-                                        {
-                                            <p>Order lines</p>
-                                            <table class="table table-bordered">
 
-                                                <thead class="thead-dark">
-                                                    <tr>
-                                                        <th>Order line Id</th>
-                                                        <th>Product Id</th>
-                                                        <th>Product name</th>
-                                                        <th>Quantity</th>
-                                                        <th>Order Id</th>
-                                                        <th>Customer name</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                        <table class="table table-bordered">
+
+                                            @if (order.Id == orderLine.OrderId)
+                                            {
+                                                if (counter == 0)
+                                                {
+                                                    <td colspan="10" align="center">
+                                                        <p>Order lines</p>
+                                                    </td>
+
+                                                    <thead class="thead-dark">
+                                                        <tr>
+                                                            <th>Order line Id</th>
+                                                            <th>Product Id</th>
+                                                            <th>Product name</th>
+                                                            <th>Quantity</th>
+                                                            <th>Order Id</th>
+                                                            <th>Customer name</th>
+                                                        </tr>
+                                                    </thead>
+                                                }
+                                                <tbody colspan="6">
                                                     <tr>
                                                         <td>@orderLine.Id</td>
                                                         <td>@orderLine.ProductId</td>
@@ -97,14 +198,15 @@
                                                         <td>@orderLine.Order.Customer.Name</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
-                                        }
+                                            }
+                                        </table>
+                                        counter++;
                                     }
                                 </td>
                             }
                             else if (currentOrder.Id == order.Id)
                             {
-                                <td colspan="8" align="center">
+                                <td colspan="10" align="center">
                                     <p>No order lines found</p>
                                 </td>
                             }
@@ -115,64 +217,8 @@
         </tbody>
     </table>
 
-    <button class="btn btn-info" @onclick="(() => GetAllOrdersAsync())">Show all orders</button>
-    <button class="btn btn-info" @onclick="(() => GetAllDispatchedOrdersAsync())">Show all dispatched orders</button>
-    <button class="btn btn-info" @onclick="(() => GetAllPendingdOrdersAsync())">Show all pending orders</button>
-    <button class="btn btn-info" @onclick="(() => DispatchAllOrders())">Process all orders</button>
-    <div class="row m-2">
-            <div class="col-5 bg-light m-2 justify-content-start">
-                <div class="p-3 mb-3 bg-secondary text-white text-center">
-                    Create new Order
-                </div>
-                <EditForm Model="@newOrder" OnValidSubmit="(() => AddNewOrder())">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    <div class="form-group">
-                        @*Binder respektive värde nedanför till objektet updateOrder*@
-                        <label for="ord">Pick customer</label>
-                        <select type="type" id="ord" class="form-control select-picker" @bind="@newOrder.CustomerId">
-                            @foreach (var cust in customers)
-                            {
-                                <option value="@cust.Id">@cust.Name</option>
-                            }
-                        </select>
-                        <br>
-                        <label for="address">Delivery address</label>
-                        <input type="type" id="address" class="form-control" @bind-value="@newOrder.DeliveryAddress" />
-                        <br>
-                        <button class="btn btn-info" type="submit">
-                            Add Order
-                        </button>
-                    </div>
-                </EditForm>
-            </div>
-        <div class="col-5 bg-light m-2 justify-content-start">
-            <div class="p-3 mb-3 bg-secondary text-white text-center">
-                Edit Order
-            </div>
-            <EditForm Model="@updateOrder" OnValidSubmit="(() => EditOrder())">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <div class="form-group">
-                    @*Binder respektive värde nedanför till objektet updateOrder*@
-                    <label for="deliveryAddress">Delivery address</label>
-                    <input type="type" id="deliveryAddress" class="form-control" @bind-value="@updateOrder.DeliveryAddress" />
-                </div>
-                <div class="text-center p-3 mb-3">
-                    <button class="btn btn-info" type="submit">Edit Customer</button>
-                </div>
-                    @if (updateOrder.PaymentCompleted)
-                    {
-                        <button class="btn btn-info" @onclick="(() => UndoPayment(updateOrder))">Undo payment</button>
-                    }
 
-                    @if (updateOrder.Dispatched)
-                    {
-                        <button class="btn btn-info" @onclick="(() => UndoDispatch(updateOrder))">Undo dispatch</button>
-                    }
-            </EditForm>
-        </div>
-    </div>
+
 </div>
 
 
@@ -189,11 +235,27 @@
         private List<Product> ListOfProducts;
         private List<Customer> ListOfCustomers;
 
+        Product AddedProduct = new Product();
         Order newOrder = new Order();
         Order updateOrder = new Order();
         bool checkedValue = false;
 
+
         OrderLine newOrderLine = new OrderLine();
+        private async Task AddNewOrderLine(Order order)
+        {
+            newOrderLine.OrderId = order.Id;
+            await orderLineRepo.AddOrderLineAsync(newOrderLine);
+            newOrderLine = new OrderLine();
+        }
+
+        //private async Task AddNewProduct(Order order)
+        //{
+        //    updateOrder = order;
+
+        //    await orderLineRepo.AddOrderLineAsync(newOrderLine);
+        //    newOrderLine = new OrderLine();
+        //}
 
         protected override async Task OnInitializedAsync()
         {
@@ -213,6 +275,10 @@
         {
             await orderRepo.EditOrderAsync(updateOrder);
             updateOrder = new Order();
+
+            //Added
+            //await orderLineRepo.AddOrderLineAsync(newOrderLine);
+            //newOrderLine = new OrderLine();
         }
 
         private void SetOrderForEdit(Order selected)

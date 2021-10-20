@@ -24,5 +24,19 @@ namespace AutomateWarehouse.Data
         {
             return await applicationDbContext.OrderLines.Where(o => o.OrderId == currentOrder.Id).ToListAsync();
         }
+
+        public async Task<OrderLine> AddOrderLineAsync(OrderLine orderLine)
+        {
+            try
+            {
+                applicationDbContext.OrderLines.Add(orderLine);
+                await applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            return orderLine;
+        }
     }
 }
