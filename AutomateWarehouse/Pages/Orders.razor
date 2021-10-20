@@ -79,7 +79,15 @@
                         <option value="">Choose a product</option>
                         @foreach (var product in products)
                         {
-                            <option value="@product.Id"> @product.Name </option>
+                            if (product.Stock > 0)
+                            {
+                                <option value="@product.Id"> @product.Name </option>
+                            }
+                            else
+                            {
+                                <option value="@product.Id"> @product.Name OUT OF STOCK </option>
+                            }
+
                         }
                     </select>
                     <br>
