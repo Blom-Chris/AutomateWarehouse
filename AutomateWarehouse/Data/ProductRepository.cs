@@ -25,6 +25,7 @@ namespace AutomateWarehouse.Data
         {
             try
             {
+                await SetRestockDate(p);
                 applicationDbContext.Products.Add(p);
                 await applicationDbContext.SaveChangesAsync();
             }
@@ -71,19 +72,20 @@ namespace AutomateWarehouse.Data
             return product;
         }
 
-        //private void SetProductForUpdates(Product selected)
-        //{
-        //    updatedProduct = selected;
-        //}
-        //private void UpdateProduct()
-        //{
-        //    //catalogueService.UpdateProduct(updatedProduct);
-        //}
+        
         public async Task<List<Product>> EmptyStock()
         {
             IEnumerable<Product> result = applicationDbContext.Products.Where(a => a.Stock < 1);
             return result.ToList();
         }
-
+        public async Task<Product> SetRestockDate(Product p)
+        {
+            if(p.Stock == 0)
+            {
+                p.RestockingDate = DateTime.Today.AddDays(10);
+                
+            }
+            return p;
+        }
     }
 }

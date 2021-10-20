@@ -7,27 +7,50 @@ using System.ComponentModel.DataAnnotations;
 namespace AutomateWarehouse.Data
 {
   public class OrderLine
-  {
-    public int Id { get; set; }
-    public int ProductId { get; set; }
-    public Product Product { get; set; }
-    public int OrderId { get; set; }
-    public Order Order { get; set; }
+    {
+    private int _id;
+    private int _productId;
+    private Product _product;
+    private int _orderId;
+    private Order _order;
+    private int _quantity;
 
-        [Required]
-        [Range(0, 9999)]
-
-        private int _quantity;
-        public int Quantity
-        {
-            get
-            {
-                return _quantity;
-            }
-            set
-            {
-                _quantity = value;
-            }
-        }
+    public int Id
+    {
+        get { return _id; }
+        set { _id = value; }
     }
+
+    public int ProductId
+    {
+        get { return _productId; }
+        set { _productId = value; }
+    }
+
+    public Product Product 
+    {
+        get { return _product; }
+        set { _product = value; }
+    }
+
+    public int OrderId
+    {
+        get { return _orderId; }
+        set { _orderId = value; }
+    }
+
+    public Order Order 
+    {
+        get { return _order; } 
+        set { _order = value; }
+    }
+
+    [Required]
+    [Range(0, 9999)]
+    public int Quantity
+    {
+        get { return _quantity; }
+        set { _quantity = value; }
+    }
+  }
 }
