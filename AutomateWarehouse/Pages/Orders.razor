@@ -49,8 +49,6 @@
                     <br>
                     <label for="deliveryAddress">Delivery address</label>
                     <input type="type" id="deliveryAddress" class="form-control" @bind-value="@updateOrder.DeliveryAddress" />
-                    <br>
-                    <label for="addOrderLine">Add product to order</label>
                 </div>
                 <div class="text-center p-3 mb-3">
                     <button class="btn btn-info" type="submit">Edit Order</button>
@@ -229,42 +227,31 @@
 
 @code {
     private List<Order> orders;
-    //private List<Order> ordersDispatched = new List<Order>();
-    //private List<Order> ordersPending = new List<Order>();
     private List<OrderLine> orderLines = new List<OrderLine>();
     private List<Customer> customers;
     private List<Product> products;
 
     private Order currentOrder = new Order();
-    //private List<OrderLine> orderLines;
     private List<Product> ListOfProducts;
     private List<Customer> ListOfCustomers;
+    private OrderLine newOrderLine = new OrderLine();
 
-    OrderLine newOrderLine = new OrderLine();
-    private async Task AddNewOrderLine(Order order)
-    {
-        newOrderLine.OrderId = order.Id;
-        await orderLineRepo.AddOrderLineAsync(newOrderLine);
-        newOrderLine = new OrderLine();
-    }
-
-    //private async Task AddNewProduct(Order order)
-    //{
-    //    updateOrder = order;
-
-    //    await orderLineRepo.AddOrderLineAsync(newOrderLine);
-    //    newOrderLine = new OrderLine();
-    //}
     Order newOrder = new Order();
     Order updateOrder = new Order();
     bool checkedValue = false;
-
 
     protected override async Task OnInitializedAsync()
     {
         orders = await orderRepo.GetAllOrdersAsync();
         customers = await customerRepo.GetCustomerAsync();
         products = await productRepo.GetAllProductsAsync();
+    }
+
+    private async Task AddNewOrderLine(Order order)
+    {
+        newOrderLine.OrderId = order.Id;
+        await orderLineRepo.AddOrderLineAsync(newOrderLine);
+        newOrderLine = new OrderLine();
     }
 
     private async Task AddNewOrder()
