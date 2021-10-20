@@ -140,11 +140,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        
         ProductsList = await productRepository.GetAllProductsAsync();
     }
     private async Task AddNewProduct()
     {
+        await productRepository.SetRestockDate(newProduct);
         await productRepository.AddProductAsync(newProduct);
+
         newProduct = new Product();
         await UpdateGUI();
     }
@@ -160,7 +163,7 @@
     {
         ProductsList = await productRepository.GetAllProductsAsync();
     }
-    Product updatedProduct = new Product();
+    //Product updatedProduct = new Product();
 
     private void SetProductForUpdate(Product selected)
     {

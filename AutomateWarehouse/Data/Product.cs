@@ -28,19 +28,7 @@ namespace AutomateWarehouse.Data
     [Range(0, 9999)]
         public int Stock { get; set; }
         public DateTime _dateTime = DateTime.Today;
-    public DateTime RestockingDate {
-            get
-            {
-                return _dateTime;
-            }
-            set {
-                if (Stock == 0)
-                {
-                    _dateTime =_dateTime.AddDays(10);
-                }
-                
-            }
-             }
+    public DateTime RestockingDate { get; set; }
   }
 
 }
