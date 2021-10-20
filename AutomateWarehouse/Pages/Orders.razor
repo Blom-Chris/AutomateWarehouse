@@ -47,7 +47,7 @@
                             }
                         </td>
                         <td>
-                            @if (@order.Dispatched == true)
+                            @if (order.Dispatched == true)
                             {
                                 <p>Dispatched</p>
                             }
@@ -58,8 +58,16 @@
                         </td>
                         <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
                         <td><button class="btn btn-info" @onclick="(() => SetOrderForEdit (order))">Edit</button></td>
+
                         <td>
-                            <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
+                            @if (!order.PaymentCompleted)
+                            {
+                                <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
+                            }
+                            else
+                            {
+                                <input type="button" name="UndoPayButton" class="btn btn-info" id="UndoPayButton" value="UndoPay" @onclick="(() => UndoPayment(order))" />
+                            }
                         </td>
                     </tr>
 
@@ -176,103 +184,101 @@
 </div>
 
 
-    @code {
-        private List<Order> orders;
-        //private List<Order> ordersDispatched = new List<Order>();
-        //private List<Order> ordersPending = new List<Order>();
-        private List<OrderLine> orderLines = new List<OrderLine>();
-        private List<Customer> customers;
-        private List<Product> products;
+@code {
+    private List<Order> orders;
+    //private List<Order> ordersDispatched = new List<Order>();
+    //private List<Order> ordersPending = new List<Order>();
+    private List<OrderLine> orderLines = new List<OrderLine>();
+    private List<Customer> customers;
+    private List<Product> products;
 
-        private Order currentOrder = new Order();
-        //private List<OrderLine> orderLines;
-        private List<Product> ListOfProducts;
-        private List<Customer> ListOfCustomers;
+    private Order currentOrder = new Order();
+    //private List<OrderLine> orderLines;
+    private List<Product> ListOfProducts;
+    private List<Customer> ListOfCustomers;
 
-        Order newOrder = new Order();
-        Order updateOrder = new Order();
-        bool checkedValue = false;
+    Order newOrder = new Order();
+    Order updateOrder = new Order();
+    bool checkedValue = false;
 
-        OrderLine newOrderLine = new OrderLine();
+    OrderLine newOrderLine = new OrderLine();
 
-        protected override async Task OnInitializedAsync()
-        {
-            orders = await orderRepo.GetAllOrdersAsync();
-            customers = await customerRepo.GetCustomerAsync();
-            products = await productRepo.GetAllProductsAsync();
-        }
-
-        private async Task AddNewOrder()
-        {
-            await orderRepo.AddNewOrderAsync(newOrder);
-            newOrder = new Order();
-            await UpdateGUI();
-        }
-
-        private async Task EditOrder()
-        {
-            await orderRepo.EditOrderAsync(updateOrder);
-            updateOrder = new Order();
-        }
-
-        private void SetOrderForEdit(Order selected)
-        {
-            updateOrder = selected;
-        }
-
-        private async Task PayOrderAsync(Order order)
-        {
-            await orderRepo.PayOrderAsync(order);
-            await UpdateGUI();
-        }
-
-        private async Task UndoPayment(Order order)
-        {
-            await orderRepo.UndoPaymentAsync(order);
-            await UpdateGUI();
-        }
-
-        private async Task UndoDispatch(Order order)
-        {
-            await orderRepo.UndoDispatchAsync(order);
-            await UpdateGUI();
-        }
-
-        private async Task DispatchAllOrders()
-        {
-            await orderRepo.ProcessOrderAsync();
-            await UpdateGUI();
-        }
-
-        private async Task GetAllOrdersAsync()
-        {
-            orders = await orderRepo.GetAllOrdersAsync();
-        }
-
-        private async Task GetAllDispatchedOrdersAsync()
-        {
-            orders = await orderRepo.GetAllDispatchedOrdersAsync();
-        }
-
-        private async Task GetAllPendingdOrdersAsync()
-        {
-            orders = await orderRepo.GetAllPendingOrdersAsync();
-        }
-
-        protected async Task UpdateGUI()
-        {
-            orders = await orderRepo.GetAllOrdersAsync();
-        }
-
-
-        private async Task ShowAllOrderLines(Order selectedOrder)
-        {
-            currentOrder = selectedOrder;
-            orderLines = await orderLineRepo.GetCurrentOrderLinesAsync(currentOrder);
-            ListOfProducts = await productRepo.GetAllProductsAsync();
-            ListOfCustomers = await customerRepo.GetCustomerAsync();
-            //await UpdateGUI();
-        }
-
-
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await orderRepo.GetAllOrdersAsync();
+        customers = await customerRepo.GetCustomerAsync();
+        products = await productRepo.GetAllProductsAsync();
     }
+
+    private async Task AddNewOrder()
+    {
+        await orderRepo.AddNewOrderAsync(newOrder);
+        newOrder = new Order();
+        await UpdateGUI();
+    }
+
+    private async Task EditOrder()
+    {
+        await orderRepo.EditOrderAsync(updateOrder);
+        updateOrder = new Order();
+    }
+
+    private void SetOrderForEdit(Order selected)
+    {
+        updateOrder = selected;
+    }
+
+    private async Task PayOrderAsync(Order order)
+    {
+        await orderRepo.PayOrderAsync(order);
+        await UpdateGUI();
+    }
+
+    private async Task UndoPayment(Order order)
+    {
+        await orderRepo.UndoPaymentAsync(order);
+        await UpdateGUI();
+    }
+
+    private async Task UndoDispatch(Order order)
+    {
+        await orderRepo.UndoDispatchAsync(order);
+        await UpdateGUI();
+    }
+
+    private async Task DispatchAllOrders()
+    {
+        await orderRepo.ProcessOrderAsync();
+        await UpdateGUI();
+    }
+
+    private async Task GetAllOrdersAsync()
+    {
+        orders = await orderRepo.GetAllOrdersAsync();
+    }
+
+    private async Task GetAllDispatchedOrdersAsync()
+    {
+        orders = await orderRepo.GetAllDispatchedOrdersAsync();
+    }
+
+    private async Task GetAllPendingdOrdersAsync()
+    {
+        orders = await orderRepo.GetAllPendingOrdersAsync();
+    }
+
+    protected async Task UpdateGUI()
+    {
+        orders = await orderRepo.GetAllOrdersAsync();
+    }
+
+
+    private async Task ShowAllOrderLines(Order selectedOrder)
+    {
+        currentOrder = selectedOrder;
+        orderLines = await orderLineRepo.GetCurrentOrderLinesAsync(currentOrder);
+        ListOfProducts = await productRepo.GetAllProductsAsync();
+        ListOfCustomers = await customerRepo.GetCustomerAsync();
+        //await UpdateGUI();
+    }
+}
