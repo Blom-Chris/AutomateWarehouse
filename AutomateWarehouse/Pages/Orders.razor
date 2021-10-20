@@ -169,11 +169,6 @@
                 <div class="text-center p-3 mb-3">
                     <button class="btn btn-info" type="submit">Edit Customer</button>
                 </div>
-                    @if (updateOrder.PaymentCompleted)
-                    {
-                        <button class="btn btn-info" @onclick="(() => UndoPayment(updateOrder))">Undo payment</button>
-                    }
-
                     @if (updateOrder.Dispatched)
                     {
                         <button class="btn btn-info" @onclick="(() => UndoDispatch(updateOrder))">Undo dispatch</button>
