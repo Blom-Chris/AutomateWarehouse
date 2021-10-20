@@ -15,5 +15,9 @@ namespace AutomateWarehouse.Data
         Task<List<Order>> GetAllDispatchedOrdersAsync();
         Task<List<Order>> GetAllPendingOrdersAsync();
         Task<List<Order>> GetAllOrdersAsync();
+    Task<Order> EditOrderAsync(Order order);
+    Task<Order> UndoPaymentAsync(Order order);
+    Task<Order> UndoDispatchAsync(Order order);
+
     }
 }
