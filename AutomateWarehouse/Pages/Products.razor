@@ -118,7 +118,7 @@
                         <td>@prod.Description</td>
                         <td>@prod.Price</td>
                         <td>@prod.Stock</td>
-                        <td>@prod.RestockingDate</td>
+                        <td>@prod.RestockingDate.ToShortDateString()</td>
                         <td><button class="btn btn-info" @onclick="(() => SetProductForUpdate( prod ))">Edit</button></td>
                         <td><button class="btn btn-danger" @onclick="(() => DeleteProduct(prod))">Delete</button></td>
 
@@ -140,7 +140,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         ProductsList = await productRepository.GetAllProductsAsync();
     }
     private async Task AddNewProduct()
@@ -161,6 +161,7 @@
     //To update the GUI by fetching from database async.
     private async Task UpdateGUI()
     {
+        
         ProductsList = await productRepository.GetAllProductsAsync();
     }
     //Product updatedProduct = new Product();
