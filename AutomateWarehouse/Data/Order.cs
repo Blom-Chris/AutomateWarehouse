@@ -9,99 +9,63 @@ namespace AutomateWarehouse.Data
 {
   public class Order
   {
-    public int Id { get; private set; }
-
-    private int _CustomerId;
-    public int CustomerId
-    {
-            get
-            {
-                return _CustomerId;
-            }
-            set
-            {
-                _CustomerId = value;
-            }
-    }
-
-    private Customer _Customer;
-    public Customer Customer
-    {
-            get
-            {
-                return _Customer;
-            }
-            set
-            {
-                _Customer = value;
-            }
-    }
-
-    private DateTime _OrderDate;
-    public DateTime OrderDate
-    {
-        get
-        {
-            return _OrderDate;
-        }
-        set
-        {
-            _OrderDate = value;
-        }
-    }
-
-    private string _DeliveryAddress;
+    private int _id;
     [Required]
-    [StringLength(30, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 7)]
+    [Range(0, 10000000000)]
+    public int Id 
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+
+    private int _customerId;
+    public int CustomerId 
+    {
+      get { return _customerId; }
+      set { _customerId = value; }
+    }
+
+    private Customer _customer;
+    public Customer Customer 
+    {
+      get { return _customer; }
+      set { _customer = value; }
+    }
+
+    private DateTime _orderDate;
+    public DateTime OrderDate 
+    {
+      get { return _orderDate; }
+      set {  _orderDate = value; }
+    }
+
+    private string _deliveryAddress;
+    [Required]
     public string DeliveryAddress 
     {
-            get
-            {
-                return _DeliveryAddress;
-            }
-            set
-            {
-                _DeliveryAddress = value;
-            } 
+      get { return _deliveryAddress; }
+      set { _deliveryAddress = value; }
     }
 
-    private bool _PaymentCompleted;
-    public bool PaymentCompleted
+    private bool _paymentCompleted;
+    public bool PaymentCompleted 
     {
-            get
-            {
-                return _PaymentCompleted;
-            }
-            set
-            {
-                _PaymentCompleted = value;
-            }
+      get { return _paymentCompleted; }
+      set { _paymentCompleted = value; }
     }
 
-    private bool _Dispatched;
-    public bool Dispatched
-        {
-            get
-            {
-                return _Dispatched;
-            }
-            set
-            {
-                _Dispatched = value;
-            }
-        }
-
-    private List<OrderLine> _Items; 
-    public List<OrderLine> Items
+    private bool _dispatched;
+    public bool Dispatched 
     {
-            get
-            {
-                return _Items;
-            }
-            set
-            {
-                _Items = value;
-            }
+      get { return _dispatched; }
+      set { _dispatched = value; }
+    }
+
+    private List<OrderLine> _items;
+    public List<OrderLine> Items 
+    {
+      get { return _items; }
+      set { _items = value; }
     }
   }
 }
