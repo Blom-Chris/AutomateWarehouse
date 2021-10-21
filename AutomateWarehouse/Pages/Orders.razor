@@ -15,7 +15,7 @@
                 Create new Order
             </div>
             <EditForm Model="@newOrder" OnValidSubmit="(() => AddNewOrder())">
-                <DataAnnotationsValidator />
+                <DataAnnotationsValidator />  
                 <ValidationSummary />
                 <div class="form-group">
                     @*Binder respektive värde nedanför till objektet updateOrder*@

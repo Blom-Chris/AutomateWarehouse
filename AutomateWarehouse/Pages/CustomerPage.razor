@@ -80,9 +80,7 @@
 
                           @if (counter == 0)
                           {
-                            <p>Dispatched orders</p>
-
-                            <thead class="thead-dark">
+                            <thead class="thead-light">
                               <tr>
                                 <th>OrderDate</th>
                                 <th>Delivery Address</th>
@@ -146,9 +144,8 @@
                     {
                       @if (cust.Id == order.CustomerId)
                       {
-                        <p>Active orders</p>
                         <table class="table table-bordered">
-                          <thead class="thead-dark">
+                          <thead class="thead-light">
                             <tr>
                               <th>OrderDate</th>
                               <th>Delivery Address</th>
