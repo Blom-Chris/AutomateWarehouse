@@ -51,16 +51,16 @@
                         <input type="type" id="deliveryAddress" class="form-control" @bind-value="@updateOrder.DeliveryAddress" />
                     </div>
                     <div class="text-center p-3 m-3">
-                        <button class="btn btn-info m-3" type="submit">Edit Order</button>
+                        <button class="btn btn-success m-3" type="submit">Edit Order</button>
 
                         @if (updateOrder.PaymentCompleted)
                         {
-                            <button class="btn btn-info m-3" @onclick="(() => UndoPayment(updateOrder))">Undo payment</button>
+                            <button class="btn btn-danger m-3" @onclick="(() => UndoPayment(updateOrder))">Undo payment</button>
                         }
 
                         @if (updateOrder.Dispatched)
                         {
-                            <button class="btn btn-info m-3" @onclick="(() => UndoDispatch(updateOrder))">Undo dispatch</button>
+                            <button class="btn btn-danger m-3" @onclick="(() => UndoDispatch(updateOrder))">Undo dispatch</button>
                         }
                     </div>
                 </EditForm>
@@ -169,11 +169,11 @@
                         <td>
                             @if (!order.PaymentCompleted)
                             {
-                                <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
+                                <input type="button" name="PayButton" class="btn btn-success" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
                             }
                             else
                             {
-                                <input type="button" name="UndoPayButton" class="btn btn-info" id="UndoPayButton" value="UndoPay" @onclick="(() => UndoPayment(order))" />
+                                <input type="button" name="UndoPayButton" class="btn btn-danger" id="UndoPayButton" value="UndoPay" @onclick="(() => UndoPayment(order))" />
                             }
                         </td>
                     </tr>
