@@ -112,10 +112,10 @@
     </div>
 
     <div align="center">
-        <button class="btn btn-info" @onclick="(() => GetAllOrdersAsync())">Show all orders</button>
-        <button class="btn btn-info" @onclick="(() => GetAllDispatchedOrdersAsync())">Show all dispatched orders</button>
-        <button class="btn btn-info" @onclick="(() => GetAllPendingdOrdersAsync())">Show all pending orders</button>
-        <button class="btn btn-info" @onclick="(() => DispatchAllOrders())">Process all orders</button>
+        <button class="btn btn-info m-1" @onclick="(() => GetAllOrdersAsync())">Show all orders</button>
+        <button class="btn btn-info m-1" @onclick="(() => GetAllDispatchedOrdersAsync())">Show all dispatched orders</button>
+        <button class="btn btn-info m-1" @onclick="(() => GetAllPendingdOrdersAsync())">Show all pending orders</button>
+        <button class="btn btn-info m-1" @onclick="(() => DispatchAllOrders())">Process all orders</button>
     </div>
     
     <br/>
@@ -183,24 +183,20 @@
                     <tr>
                         @if (orderLines != null)
                         {
-                            @if (orderLines.Any())
+                            @if (orderLines.Any() && currentOrder.Id == order.Id)
                             {
-                                int counter = 0;
+                                
                                 <td colspan="10">
+                                    
                                     @foreach (var orderLine in orderLines)
                                     {
 
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered margin-0 padding-0">
 
                                             @if (order.Id == orderLine.OrderId)
                                             {
-                                                if (counter == 0)
-                                                {
-                                                    @*<td colspan="6" align="center">
-                                                        <p>Order lines</p>
-                                                    </td>*@
-
-                                                    <thead class="thead-light">
+                                               
+                                                    <thead class="thead-light margin-0 padding-0">
                                                         <tr>
                                                             <th>Order line Id</th>
                                                             <th>Product Id</th>
@@ -210,20 +206,26 @@
                                                             <th>Customer name</th>
                                                         </tr>
                                                     </thead>
+                                                
+                                        <tbody class="margin-0 padding-0">
+                                            @foreach (var ol in orderLines)
+                                             {
+
+                                   
+                                                <tr>
+                                                    <td>@ol.Id</td>
+                                                    <td>@ol.ProductId</td>
+                                                    <td>@ol.Product.Name</td>
+                                                    <td>@ol.Quantity</td>
+                                                    <td>@ol.OrderId</td>
+                                                    <td>@ol.Order.Customer.Name</td>
+                                                </tr>
                                                 }
-                                                <tbody >
-                                                    <tr>
-                                                        <td>@orderLine.Id</td>
-                                                        <td>@orderLine.ProductId</td>
-                                                        <td>@orderLine.Product.Name</td>
-                                                        <td>@orderLine.Quantity</td>
-                                                        <td>@orderLine.OrderId</td>
-                                                        <td>@orderLine.Order.Customer.Name</td>
-                                                    </tr>
-                                                </tbody>
+                                        </tbody>
                                             }
                                         </table>
-                                        counter++;
+                                        
+                                        break;
                                     }
                                 </td>
                             }
@@ -270,6 +272,7 @@
         newOrderLine.OrderId = order.Id;
         await orderLineRepo.AddOrderLineAsync(newOrderLine);
         newOrderLine = new OrderLine();
+        
     }
 
     private async Task AddNewOrder()
