@@ -113,8 +113,7 @@ namespace AutomateWarehouse.Data
         public async Task ProcessOrderAsync()
         {
             IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.PaymentCompleted == true &&
-                o.Items.All(i => i.Quantity <= i.Product.Stock));
-
+                o.Items.All(i => i.Quantity <= i.Product.Stock) && o.Dispatched == false);
             foreach(Order o in dbEntry)
             {
 
@@ -124,15 +123,30 @@ namespace AutomateWarehouse.Data
                 }
                
                 o.Dispatched = true;
+                UpdateProductStock(o);
             }
             await applicationDbContext.SaveChangesAsync();
         }
 
-
-
-
-
-
+        public async Task UpdateProductStock(Order o)
+        {
+            try
+            {
+                foreach (OrderLine orderLine in o.Items)
+                {
+                    Product dbEntry = applicationDbContext.Products.FirstOrDefault(p => p.Id == orderLine.ProductId);
+                    if (dbEntry != null)
+                    {
+                        dbEntry.Stock -= orderLine.Quantity;
+                        await applicationDbContext.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
