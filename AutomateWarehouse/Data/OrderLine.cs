@@ -8,9 +8,6 @@ namespace AutomateWarehouse.Data
 {
     public class OrderLine
     {
-        /// <summary>
-        /// Property for OrderLine.Id, autoincrement in DB.
-        /// </summary>
         private int _id;
         public int Id
         {
