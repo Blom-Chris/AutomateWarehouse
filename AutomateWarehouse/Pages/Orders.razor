@@ -52,18 +52,19 @@
                         <label for="deliveryAddress">Delivery address</label>
                         <input type="type" id="deliveryAddress" class="form-control" @bind-value="@updateOrder.DeliveryAddress" />
                     </div>
-                    <div class="text-center p-3 mb-3">
-                        <button class="btn btn-info" type="submit">Edit Order</button>
-                    </div>
-                    @if (updateOrder.PaymentCompleted)
-                    {
-                        <button class="btn btn-info" @onclick="(() => UndoPayment(updateOrder))">Undo payment</button>
-                    }
+                    <div class="text-center p-3 m-3">
+                        <button class="btn btn-info m-3" type="submit">Edit Order</button>
 
-                    @if (updateOrder.Dispatched)
-                    {
-                        <button class="btn btn-info" @onclick="(() => UndoDispatch(updateOrder))">Undo dispatch</button>
-                    }
+                        @if (updateOrder.PaymentCompleted)
+                        {
+                            <button class="btn btn-info m-3" @onclick="(() => UndoPayment(updateOrder))">Undo payment</button>
+                        }
+
+                        @if (updateOrder.Dispatched)
+                        {
+                            <button class="btn btn-info m-3" @onclick="(() => UndoDispatch(updateOrder))">Undo dispatch</button>
+                        }
+                    </div>
                 </EditForm>
             </div>
         }
@@ -163,8 +164,8 @@
                                 <p>Not dispatched</p>
                             }
                         </td>
-                        <td><button class="btn btn-info" @onclick="(() => SetOrderForAddingProduct (order))">Add product</button></td>
-                        <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
+                        <td><button class="btn btn-info" @onclick="(() => SetOrderForAddingProduct (order))">Add</button></td>
+                        <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show</button></td>
                         <td><button class="btn btn-info" @onclick="(() => SetOrderForEdit (order))">Edit</button></td>
 
                         <td>
@@ -195,11 +196,11 @@
                                             {
                                                 if (counter == 0)
                                                 {
-                                                    <td colspan="6" align="center">
+                                                    @*<td colspan="6" align="center">
                                                         <p>Order lines</p>
-                                                    </td>
+                                                    </td>*@
 
-                                                    <thead class="thead-dark">
+                                                    <thead class="thead-light">
                                                         <tr>
                                                             <th>Order line Id</th>
                                                             <th>Product Id</th>

@@ -249,82 +249,113 @@ else
 }
 
 @code {
-      private List<Customer> customers;
-      private List<Order> dispatchedOrders;
-      private List<Order> activeOrders;
-      private bool loadFailed;
-      Customer NewCustomer = new Customer();
-      Customer UpdateCustomer = new Customer();
-      Customer DispatchedCustomer = new Customer();
-      Customer ActiveCustomer = new Customer();
+  private List<Customer> customers;
+  private List<Order> dispatchedOrders;
+  private List<Order> activeOrders;
+  private bool loadFailed;
+  Customer NewCustomer = new Customer();
+  Customer UpdateCustomer = new Customer();
+  Customer DispatchedCustomer = new Customer();
+  Customer ActiveCustomer = new Customer();
 
-      protected override async Task OnInitializedAsync()
-      {
-        customers = await customerRepo.GetCustomerAsync();
-      }
+  /// <summary>
+  /// Overriding OnInitializedAsync method for diplaying Customers.
+  /// </summary>
+  /// <returns></returns>
+  protected override async Task OnInitializedAsync()
+  {
+    customers = await customerRepo.GetCustomerAsync();
+  }
 
-      //Add a new Cutomer by calling the repository. Create a new object wo erase the old.
-      private async Task AddNewCustomer()
-      {
-        try
-        {
-          loadFailed = false;
-          await customerRepo.AddCustomerAsync(NewCustomer);
-          NewCustomer = new Customer();
-          await UpdateGUI();
-        }
-        catch (Exception ex)
-        {
-          loadFailed = true;
-        }
-      }
+  /// <summary>
+  /// Add a new Cutomer by calling the repository. Create a new object to erase the old.
+  /// </summary>
+  /// <returns></returns>
+  private async Task AddNewCustomer()
+  {
+    try
+    {
+      loadFailed = false;
+      await customerRepo.AddCustomerAsync(NewCustomer);
+      NewCustomer = new Customer();
+      await UpdateGUI();
+    }
+    catch (Exception ex)
+    {
+      loadFailed = true;
+    }
+  }
 
-      //Delete a customer by calling method in repository.
-      private async Task DeleteCustomer(Customer customer)
-      {
-        await customerRepo.DeleteCustomerAsync(customer);
-        await UpdateGUI();
-      }
+  /// <summary>
+  /// Delete a customer by calling method in repository.
+  /// </summary>
+  /// <param name="customer"></param>
+  /// <returns></returns>
+  private async Task DeleteCustomer(Customer customer)
+  {
+    await customerRepo.DeleteCustomerAsync(customer);
+    await UpdateGUI();
+  }
 
-      private void SetCustomerForEdit(Customer selected)
-      {
-        UpdateCustomer = selected;
-      }
-      //Edit a customer by calling method in repository.
-      private async Task EditCustomer()
-      {
-        await customerRepo.EditCustomerAsync(UpdateCustomer);
-        UpdateCustomer = new Customer();
-        await UpdateGUI();
-      }
+  /// <summary>
+  /// Setting customer for edit.
+  /// </summary>
+  /// <param name="selected">Customer to set to object in method</param>
+  private void SetCustomerForEdit(Customer selected)
+  {
+    UpdateCustomer = selected;
+  }
+  /// <summary>
+  /// Edit a customer by calling method in repository.
+  /// </summary>
+  /// <returns></returns>
+  private async Task EditCustomer()
+  {
+    await customerRepo.EditCustomerAsync(UpdateCustomer);
+    UpdateCustomer = new Customer();
+    await UpdateGUI();
+  }
 
-      public async Task SetCustomerForDispatchedOrders(Customer selected)
-      {
-        if (activeOrders != null)
-        {
-          activeOrders.Clear();
-        }
-        ActiveCustomer = new Customer();
-        DispatchedCustomer = selected;
-        dispatchedOrders = await customerRepo.ShowDispatchedOrdersByCustomer(DispatchedCustomer);
-        await UpdateGUI();
-      }
+  /// <summary>
+  /// Sets customer to show active orders and then showing dispatched orders by calling method in repository. Setting active customer to new to not display the active customer on the page.
+  /// </summary>
+  /// <param name="selected">Customer to set to object in method</param>
+  /// <returns></returns>
+  public async Task SetCustomerForDispatchedOrders(Customer selected)
+  {
+    if (activeOrders != null)
+    {
+      activeOrders.Clear();
+    }
+    ActiveCustomer = new Customer();
+    DispatchedCustomer = selected;
+    dispatchedOrders = await customerRepo.ShowDispatchedOrdersByCustomer(DispatchedCustomer);
+    await UpdateGUI();
+  }
 
-      public async Task SetCustomerForActiveOrders(Customer selected)
-      {
-        if (dispatchedOrders != null)
-        {
-          dispatchedOrders.Clear();
-        }
-        DispatchedCustomer = new Customer();
-        ActiveCustomer = selected;
-        activeOrders = await customerRepo.ShowActiveOrdersByCustomer(ActiveCustomer);
-        await UpdateGUI();
-      }
+  /// <summary>
+  /// Sets customer to show active order and then showing active orderse by calling method in repository. Setting active customer to new to not display the active customer on the page.
+  /// </summary>
+  /// <param name="selected">Customer to set to object in method</param>
+  /// <returns></returns>
+  public async Task SetCustomerForActiveOrders(Customer selected)
+  {
+    if (dispatchedOrders != null)
+    {
+      dispatchedOrders.Clear();
+    }
+    DispatchedCustomer = new Customer();
+    ActiveCustomer = selected;
+    activeOrders = await customerRepo.ShowActiveOrdersByCustomer(ActiveCustomer);
+    await UpdateGUI();
+  }
 
-      //To update the GUI by fetching from database async.
-      private async Task UpdateGUI()
-      {
-        customers = await customerRepo.GetCustomerAsync();
-      }
+  /// <summary>
+  /// Updates the GUI by fetching from database async.
+  /// </summary>
+  /// <returns></returns>
+  private async Task UpdateGUI()
+  {
+    customers = await customerRepo.GetCustomerAsync();
+  }
 }
