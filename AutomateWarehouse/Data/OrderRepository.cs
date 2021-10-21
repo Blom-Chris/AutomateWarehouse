@@ -123,30 +123,30 @@ namespace AutomateWarehouse.Data
                 }
                
                 o.Dispatched = true;
-                UpdateProductStock(o);
+                //UpdateProductStock(o);
             }
             await applicationDbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateProductStock(Order o)
-        {
-            try
-            {
-                foreach (OrderLine orderLine in o.Items)
-                {
-                    Product dbEntry = applicationDbContext.Products.FirstOrDefault(p => p.Id == orderLine.ProductId);
-                    if (dbEntry != null)
-                    {
-                        dbEntry.Stock -= orderLine.Quantity;
-                        await applicationDbContext.SaveChangesAsync();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //public async Task UpdateProductStock(Order o)
+        //{
+        //    try
+        //    {
+        //        foreach (OrderLine orderLine in o.Items)
+        //        {
+        //            Product dbEntry = applicationDbContext.Products.FirstOrDefault(p => p.Id == orderLine.ProductId);
+        //            if (dbEntry != null)
+        //            {
+        //                dbEntry.Stock -= orderLine.Quantity;
+        //                await applicationDbContext.SaveChangesAsync();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
