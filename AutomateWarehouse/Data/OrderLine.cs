@@ -27,7 +27,6 @@ namespace AutomateWarehouse.Data
         set { _productId = value; }
     }
 
-    [Required]
     public Product Product 
     {
         get { return _product; }

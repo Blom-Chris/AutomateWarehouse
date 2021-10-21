@@ -114,12 +114,25 @@ namespace AutomateWarehouse.Data
         {
             IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.PaymentCompleted == true &&
                 o.Items.All(i => i.Quantity <= i.Product.Stock));
+
             foreach(Order o in dbEntry)
             {
+
+                foreach (OrderLine i in o.Items)
+                {
+                        i.Product.Stock -= i.Quantity;
+                }
+               
                 o.Dispatched = true;
             }
             await applicationDbContext.SaveChangesAsync();
         }
+
+
+
+
+
+
 
         public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
