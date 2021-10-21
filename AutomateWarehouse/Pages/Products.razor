@@ -44,6 +44,8 @@
                 </div>
             </EditForm>
         </div>
+        @if (editProduct) 
+        {
         <div class="col-5.5 bg-light m-2 justify-content-start">
             <EditForm Model="@updateProduct" OnValidSubmit="(() => EditProduct())">
                 <DataAnnotationsValidator />
@@ -80,7 +82,8 @@
                 </div>
             </EditForm>
         </div>
-
+        }
+    @*<div><label visible="Mod(RoundDown(Timer1.Value/5000,0),2)=1" >Edit complete</label></div>*@
     </div>
     <div>
         <select type="text" id="dept" class="form-control select-picker"
@@ -136,7 +139,7 @@
     public string FilterFunction { get; set; }
     Product newProduct = new Product();
     Product updateProduct = new Product();
-
+    bool editProduct = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -161,19 +164,21 @@
     //To update the GUI by fetching from database async.
     private async Task UpdateGUI()
     {
-        
+
         ProductsList = await productRepository.GetAllProductsAsync();
     }
     //Product updatedProduct = new Product();
 
     private void SetProductForUpdate(Product selected)
     {
+        editProduct = true;
         updateProduct = selected;
     }
     private async Task EditProduct()
     {
         await productRepository.EditProductsAsync(updateProduct);
         updateProduct = new Product();
+        editProduct = false;
         await UpdateGUI();
     }
     private async void FilterGUI()
