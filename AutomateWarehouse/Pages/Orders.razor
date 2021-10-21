@@ -15,7 +15,7 @@
                 Create new Order
             </div>
             <EditForm Model="@newOrder" OnValidSubmit="(() => AddNewOrder())">
-                <DataAnnotationsValidator />
+                <DataAnnotationsValidator />  
                 <ValidationSummary />
                 <div class="form-group">
                     @*Binder respektive värde nedanför till objektet updateOrder*@
@@ -176,62 +176,67 @@
                     }
                 </td>
             </tr>
+            <tr>
+                @if (orderLines != null)
+                {
+                    @if (orderLines.Any())
+                    {
+                        int counter = 0;
 
-                    <tr>
-                        @if (orderLines != null)
-                        {
-                            @if (orderLines.Any())
-                            {
-                                int counter = 0;
-                                <td colspan="10">
-                                    @foreach (var orderLine in orderLines)
-                                    {
+                            <td colspan="10"> 
+                                <p>Testar</p>
+                                
+                                
+                                @foreach (var orderLine in orderLines)
+                                {
 
-                                        <table class="table table-bordered">
+                                    <table class="table table-bordered">
 
-                                            @if (order.Id == orderLine.OrderId)
+                                        @if (order.Id == orderLine.OrderId)
+                                        {
+
+                                            if (counter == 0)
                                             {
-                                                if (counter == 0)
-                                                {
-                                                    @*<td colspan="6" align="center">
-                                                        <p>Order lines</p>
-                                                    </td>*@
+                                                <td colspan="6" align="center">
+                                                    <p>Order lines</p>
+                                                </td>
 
-                                                    <thead class="thead-light">
-                                                        <tr>
-                                                            <th>Order line Id</th>
-                                                            <th>Product Id</th>
-                                                            <th>Product name</th>
-                                                            <th>Quantity</th>
-                                                            <th>Order Id</th>
-                                                            <th>Customer name</th>
-                                                        </tr>
-                                                    </thead>
-                                                }
-                                                <tbody >
+                                                <thead class="thead-light">
                                                     <tr>
-                                                        <td>@orderLine.Id</td>
-                                                        <td>@orderLine.ProductId</td>
-                                                        <td>@orderLine.Product.Name</td>
-                                                        <td>@orderLine.Quantity</td>
-                                                        <td>@orderLine.OrderId</td>
-                                                        <td>@orderLine.Order.Customer.Name</td>
+                                                        <th>Order line Id</th>
+                                                        <th>Product Id</th>
+                                                        <th>Product name</th>
+                                                        <th>Quantity</th>
+                                                        <th>Order Id</th>
+                                                        <th>Customer name</th>
                                                     </tr>
-                                                </tbody>
+                                                </thead>
                                             }
-                                        </table>
-                                        counter++;
-                                    }
-                                </td>
-                            }
-                            else if (currentOrder.Id == order.Id)
-                            {
-                                <td colspan="10" align="center">
-                                    <p>No order lines found</p>
-                                </td>
-                            }
+                                            <tbody>
+                                                <tr>
+                                                    <td>@orderLine.Id</td>
+                                                    <td>@orderLine.ProductId</td>
+                                                    <td>@orderLine.Product.Name</td>
+                                                    <td>@orderLine.Quantity</td>
+                                                    <td>@orderLine.OrderId</td>
+                                                    <td>@orderLine.Order.Customer.Name</td>
+                                                </tr>
+                                            </tbody>
+                                        }
+
+                                    </table>
+                                    counter++;
+                                }
+                            </td>
                         }
-                    </tr>
+                        else if (currentOrder.Id == order.Id)
+                        {
+                            <td colspan="10" align="center">
+                                <p>No order lines found</p>
+                            </td>
+                        }
+                    }
+                </tr>
                 }
             }
         </tbody>

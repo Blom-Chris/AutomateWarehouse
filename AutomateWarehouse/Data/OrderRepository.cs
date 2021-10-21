@@ -116,6 +116,7 @@ namespace AutomateWarehouse.Data
                 o.Items.All(i => i.Quantity <= i.Product.Stock) && o.Dispatched == false);
             foreach(Order o in dbEntry)
             {
+
                 foreach (OrderLine i in o.Items)
                 {
                         i.Product.Stock -= i.Quantity;
