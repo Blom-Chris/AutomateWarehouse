@@ -162,10 +162,9 @@
                         <p>Not dispatched</p>
                     }
                 </td>
-                <td><button class="btn btn-info" @onclick="(() => SetOrderForAddingProduct (order))">Add product</button></td>
-                <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
+                <td><button class="btn btn-info" @onclick="(() => SetOrderForAddingProduct (order))">Add</button></td>
+                <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show</button></td>
                 <td><button class="btn btn-info" @onclick="(() => SetOrderForEdit (order))">Edit</button></td>
-
                 <td>
                     @if (!order.PaymentCompleted)
                     {
