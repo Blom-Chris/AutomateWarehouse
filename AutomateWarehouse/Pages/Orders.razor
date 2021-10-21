@@ -15,7 +15,7 @@
                 Create new Order
             </div>
             <EditForm Model="@newOrder" OnValidSubmit="(() => AddNewOrder())">
-                <DataAnnotationsValidator />
+                <DataAnnotationsValidator />  
                 <ValidationSummary />
                 <div class="form-group">
                     @*Binder respektive värde nedanför till objektet updateOrder*@
@@ -30,9 +30,7 @@
                     <label for="address">Delivery address</label>
                     <input type="type" id="address" class="form-control" @bind-value="@newOrder.DeliveryAddress" />
                     <br>
-                    <button class="btn btn-info" type="submit">
-                        Add Order
-                    </button>
+                    <button class="btn btn-success" type="submit">Add Order</button>
                 </div>
             </EditForm>
         </div>
@@ -260,6 +258,14 @@
     Order addProductToOrder = new Order();
     bool checkedValue = false;
 
+
+    /// <summary>
+    /// Initially sets all lists by fetching all data from Products, Customers and Orders tables from DB.
+    /// orders list is used for displaying all current orders in the DB
+    /// customers list is used for displaying which customers has placed the orders.
+    /// products list is used for displaying all products when adding a new order line to an order.
+    /// </summary>
+    /// <returns></returns>
     protected override async Task OnInitializedAsync()
     {
         orders = await orderRepo.GetAllOrdersAsync();
@@ -267,14 +273,23 @@
         products = await productRepo.GetAllProductsAsync();
     }
 
+    /// <summary>
+    /// Adds a new order line to the selected order
+    /// </summary>
+    /// <param name="order"> The selected order </param>
+    /// <returns></returns>
     private async Task AddNewOrderLine(Order order)
     {
         newOrderLine.OrderId = order.Id;
         await orderLineRepo.AddOrderLineAsync(newOrderLine);
         newOrderLine = new OrderLine();
-        
+        await UpdateGUI();
     }
 
+    /// <summary>
+    /// Adds a new order to the DB
+    /// </summary>
+    /// <returns></returns>
     private async Task AddNewOrder()
     {
         await orderRepo.AddNewOrderAsync(newOrder);
@@ -282,73 +297,127 @@
         await UpdateGUI();
     }
 
+    /// <summary>
+    /// Edit the current selected order (updateOrder) 
+    /// </summary>
+    /// <returns></returns>
     private async Task EditOrder()
     {
         await orderRepo.EditOrderAsync(updateOrder);
         updateOrder = new Order();
     }
 
+    /// <summary>
+    /// Sets the updateOrder varaible which is used in other methods, EditOrder() for example
+    /// </summary>
+    /// <param name="selected"></param>
     private void SetOrderForEdit(Order selected)
     {
         updateOrder = selected;
     }
 
+    /// <summary>
+    /// Sets the addProductToOrder varaible which is the input parameter in AddNewOrderLine()
+    /// </summary>
+    /// <param name="selected"></param>
     private void SetOrderForAddingProduct(Order selected)
     {
         addProductToOrder = selected;
     }
 
+    /// <summary>
+    /// Sets the PaymentCompleted variable to true for the selected order
+    /// </summary>
+    /// <param name="order"> selected order </param>
+    /// <returns></returns>
     private async Task PayOrderAsync(Order order)
     {
         await orderRepo.PayOrderAsync(order);
         await UpdateGUI();
     }
 
+    /// <summary>
+    /// Sets the PaymentCompleted varaible to false for the selected order
+    /// </summary>
+    /// <param name="order"> selected order </param>
+    /// <returns></returns>
     private async Task UndoPayment(Order order)
     {
         await orderRepo.UndoPaymentAsync(order);
         await UpdateGUI();
     }
 
+    /// <summary>
+    /// Sets the Dispatched variable to false for the selected order
+    /// </summary>
+    /// <param name="order"> selected order </param>
+    /// <returns></returns>
     private async Task UndoDispatch(Order order)
     {
         await orderRepo.UndoDispatchAsync(order);
         await UpdateGUI();
     }
 
+    /// <summary>
+    /// Sets the Dispatched variable to true for all orders
+    /// </summary>
+    /// <returns></returns>
     private async Task DispatchAllOrders()
     {
         await orderRepo.ProcessOrderAsync();
         await UpdateGUI();
     }
 
+    /// <summary>
+    /// Fetch all orders from the DB (For the table filter function)
+    /// </summary>
+    /// <returns></returns>
     private async Task GetAllOrdersAsync()
     {
         orders = await orderRepo.GetAllOrdersAsync();
     }
 
+    /// <summary>
+    /// Fetch all dispatched orders from the DB (For the table filter function)
+    /// </summary>
+    /// <returns></returns>
     private async Task GetAllDispatchedOrdersAsync()
     {
         orders = await orderRepo.GetAllDispatchedOrdersAsync();
     }
 
+    /// <summary>
+    /// Fetch all pending orders from the DB (For the table filter function)
+    /// </summary>
+    /// <returns></returns>
     private async Task GetAllPendingdOrdersAsync()
     {
         orders = await orderRepo.GetAllPendingOrdersAsync();
     }
 
+    /// <summary>
+    /// Updates the lists for all entities
+    /// </summary>
+    /// <returns></returns>
     protected async Task UpdateGUI()
     {
         orders = await orderRepo.GetAllOrdersAsync();
+        customers = await customerRepo.GetCustomerAsync();
+        products = await productRepo.GetAllProductsAsync();
+        orderLines = await orderLineRepo.GetCurrentOrderLinesAsync(currentOrder);
     }
 
-
+    /// <summary>
+    /// Displays all order lines underneath the selected order in the table
+    /// </summary>
+    /// <param name="selectedOrder"> the selected order </param>
+    /// <returns></returns>
     private async Task ShowAllOrderLines(Order selectedOrder)
     {
         currentOrder = selectedOrder;
         orderLines = await orderLineRepo.GetCurrentOrderLinesAsync(currentOrder);
         ListOfProducts = await productRepo.GetAllProductsAsync();
         ListOfCustomers = await customerRepo.GetCustomerAsync();
-        //await UpdateGUI();
+        await UpdateGUI();
     }
 }

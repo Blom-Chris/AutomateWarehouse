@@ -141,11 +141,21 @@
     Product updateProduct = new Product();
     bool editProduct = false;
 
+    /// <summary>
+    /// Initially sets ProductsList by fetching data from the Product table in the DB.
+    /// ProductsList is used for displaying which products that are available to order.
+    /// </summary>
+    /// <returns></returns>
     protected override async Task OnInitializedAsync()
     {
-
         ProductsList = await productRepository.GetAllProductsAsync();
     }
+
+    /// <summary>
+    /// Create a new product. Sets a restocking date for the product and adds it to the DB.
+    /// Also clears the newProduct object from the added products attributes.
+    /// </summary>
+    /// <returns></returns>
     private async Task AddNewProduct()
     {
         await productRepository.SetRestockDate(newProduct);
@@ -155,25 +165,43 @@
         await UpdateGUI();
     }
 
-    //Delete a customer by calling method in repository.
+    /// <summary>
+    /// Delete a customer by calling method in repository
+    /// </summary>
+    /// <param name="p"></param>
+    /// <returns></returns>
     private async Task DeleteProduct(Product p)
     {
         await productRepository.RemoveProductAsync(p);
         await UpdateGUI();
     }
-    //To update the GUI by fetching from database async.
+
+    /// <summary>
+    /// Updating the GUI by fetching from database async
+    /// </summary>
+    /// <returns></returns>
     private async Task UpdateGUI()
     {
 
         ProductsList = await productRepository.GetAllProductsAsync();
     }
-    //Product updatedProduct = new Product();
 
+    /// <summary>
+    /// Sets the updateProduct object to the selected Product in the table,
+    /// which is later used in EditProduct()
+    /// </summary>
+    /// <param name="selected"></param>
     private void SetProductForUpdate(Product selected)
     {
         editProduct = true;
         updateProduct = selected;
     }
+
+    /// <summary>
+    /// Edits the attributes of the selected product.
+    /// Also clears the updateProduct object from the updated products attributes.
+    /// </summary>
+    /// <returns></returns>
     private async Task EditProduct()
     {
         await productRepository.EditProductsAsync(updateProduct);
@@ -181,6 +209,11 @@
         editProduct = false;
         await UpdateGUI();
     }
+
+    /// <summary>
+    /// Filtering method for the table that shows either all products in the DB
+    /// or only the ones that are out of stock.
+    /// </summary>
     private async void FilterGUI()
     {
         switch (FilterFunction)

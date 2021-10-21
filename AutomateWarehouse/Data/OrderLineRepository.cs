@@ -14,18 +14,22 @@ namespace AutomateWarehouse.Data
             applicationDbContext = context;
         }
 
-        //Behövs inte
-        public async Task<List<OrderLine>> GetAllOrderLinesAsync()
-        {
-            return await applicationDbContext.OrderLines.ToListAsync();
-        }
-
+        /// <summary>
+        /// Fetch the order lines for the selected order from the DB.
+        /// </summary>
+        /// <param name="currentOrder"></param>
+        /// <returns> A list of all order lines </returns>
         public async Task<List<OrderLine>> GetCurrentOrderLinesAsync(Order currentOrder)
         {
             return await applicationDbContext.OrderLines.Where(o => o.OrderId == currentOrder.Id).ToListAsync();
         }
 
-        public async Task<OrderLine> AddOrderLineAsync(OrderLine orderLine)
+        /// <summary>
+        /// Adds a new product (i.e. order line) to a order.
+        /// </summary>
+        /// <param name="orderLine"></param>
+        /// <returns></returns>
+        public async Task AddOrderLineAsync(OrderLine orderLine)
         {
             try
             {
@@ -36,7 +40,6 @@ namespace AutomateWarehouse.Data
             {
                 throw;
             }
-            return orderLine;
         }
     }
 }

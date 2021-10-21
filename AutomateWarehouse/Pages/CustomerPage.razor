@@ -3,203 +3,202 @@
 @*@inject CustomerRepository customerRepo*@
 @inject ICustomerRepository customerRepo
 
-<h3>All customers</h3>
-
-@if (customers.Any())
-{
-  <div class="container">
-
-    <table class="table table-bordered">
-      <thead class="thead-dark">
-        <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Email</th>
-          <th>Show Dispatched orders</th>
-          <th>Show Active orders</th>
-          <th>Delete Customer</th>
-          <th>Edit Customer</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        @foreach (var cust in customers)
-        {
-          <tr>
-            <td>@cust.Name</td>
-            <td>@cust.Phone</td>
-            <td>@cust.Email</td>
-            <td><button class="btn btn-info" @onclick="(() => SetCustomerForDispatchedOrders(cust))">Dispatched orders </button></td>
-            <td><button class="btn btn-info" @onclick="(() => SetCustomerForActiveOrders(cust))">Active orders</button></td>
-            <td><button class="btn btn-danger" @onclick="(() => DeleteCustomer(cust))">Delete</button></td>
-            <td><button class="btn btn-info" @onclick="(() => SetCustomerForEdit(cust))">Edit</button></td>
-          </tr>
-          <tr>
-
-            @if (dispatchedOrders != null)
-            {
-              @if (dispatchedOrders.Any())
-              {
-                int counter = 0;
-            <td colspan="7">
-
-
-              @foreach (var order in dispatchedOrders)
-              {
-                <table class="table table-bordered">
-                  @if (cust.Id == order.CustomerId)
-                  {
-
-                    @if (counter == 0)
-                    {
-                      <p>Dispatched orders</p>
-
-                      <thead class="thead-dark">
-                        <tr>
-                          <th>OrderDate</th>
-                          <th>Delivery Address</th>
-                          <th>Payment done</th>
-                          <th>Dispatched</th>
-                        </tr>
-                      </thead>
-                    }
-
-
-                    <tbody>
-                      <tr>
-                        <td>@order.OrderDate</td>
-                        <td>@order.DeliveryAddress</td>
-                        <td>
-                          @if (order.PaymentCompleted == true)
-                          {
-                            <p>Paid</p>
-                          }
-                          else
-                          {
-                            <p>Not paid</p>
-                          }
-                        </td>
-                        <td>
-                          @if (order.Dispatched == true)
-                          {
-                            <p>Dispatched</p>
-                          }
-                          else
-                          {
-                            <p>Not dispatched</p>
-                          }
-                        </td>
-                      </tr>
-                    </tbody>
-
-                  }
-                </table>
-                counter++;
-              }
-
-            </td>
-              }
-              else if (DispatchedCustomer.Id == cust.Id)
-              {
-                <td colspan="7" align="center"><p>No dispatched orders found</p></td>
-
-              }
-            }
-
-          </tr>
-          <tr>
-
-            @if (activeOrders != null)
-            {
-              @if (activeOrders.Any())
-              {
-                <td colspan="7">
-                  @foreach (var order in activeOrders)
-                  {
-                    @if (cust.Id == order.CustomerId)
-                    {
-                      <p>Active orders</p>
-                      <table class="table table-bordered">
-                        <thead class="thead-dark">
-                          <tr>
-                            <th>OrderDate</th>
-                            <th>Delivery Address</th>
-                            <th>Payment done</th>
-                            <th>Dispatched</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>@order.OrderDate</td>
-                            <td>@order.DeliveryAddress</td>
-                            <td>
-                              @if (order.PaymentCompleted == true)
-                              {
-                                <p>Paid</p>
-                              }
-                              else
-                              {
-                                <p>Not paid</p>
-                              }
-                            </td>
-                            <td>
-                              @if (@order.Dispatched == true)
-                              {
-                                <p>Dispatched</p>
-                              }
-                              else
-                              {
-                                <p>Not dispatched</p>
-                              }
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    }
-                  }
-                </td>
-              }
-              else if (ActiveCustomer.Id == cust.Id)
-              {
-                <td colspan="7" align="center"><p>No active orders found</p></td>
-
-              }
-            }
-
-          </tr>
-        }
-
-      </tbody>
-    </table>
-
-
-    <div class="row m-5">
-      <div class="col-5 bg-light m-2 justify-content-start">
-        <div class="p-3 mb-3 bg-secondary text-white text-center">
-          Add new Customer
-        </div>
-        <EditForm Model="@NewCustomer" OnValidSubmit="@AddNewCustomer">
-          <DataAnnotationsValidator />
-          <ValidationSummary />
-          <div class="form-group">
-            @*Binder respektive värde nedanför till objektet NewEmployee*@
-            <label for="name">Name</label>
-            <input type="type" id="name" class="form-control" @bind-value="@NewCustomer.Name" />
-          </div>
-          <div class="form-group">
-            <label for="phone">Phone</label>
-            <input type="type" id="name" class="form-control" @bind-value="@NewCustomer.Phone" />
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="type" id="name" class="form-control" @bind-value="@NewCustomer.Email" />
-          </div>
-
-          <div class="text-center p-3 mb-3">
-            <button class="btn btn-info" type="submit">Add Customer</button>
-          </div>
-        </EditForm>
+<div class="row m-5">
+  <div class="col-5 bg-light m-2 justify-content-start">
+    <div class="p-3 mb-3 bg-secondary text-white text-center">
+      Add new Customer
+    </div>
+    <EditForm Model="@NewCustomer" OnValidSubmit="@AddNewCustomer">
+      <DataAnnotationsValidator />
+      <ValidationSummary />
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="type" id="name" class="form-control" @bind-value="@NewCustomer.Name" />
       </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="type" id="name" class="form-control" @bind-value="@NewCustomer.Phone" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="type" id="name" class="form-control" @bind-value="@NewCustomer.Email" />
+      </div>
+
+      <div class="text-center p-3 mb-3">
+        <button class="btn btn-info" type="submit">Add Customer</button>
+      </div>
+    </EditForm>
+  </div>
+  </div>
+
+  <h3>All customers</h3>
+
+  @if (customers.Any())
+  {
+    <div class="container">
+
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Show Dispatched orders</th>
+            <th>Show Active orders</th>
+            <th>Delete Customer</th>
+            <th>Edit Customer</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          @foreach (var cust in customers)
+          {
+            <tr>
+              <td>@cust.Name</td>
+              <td>@cust.Phone</td>
+              <td>@cust.Email</td>
+              <td><button class="btn btn-info" @onclick="(() => SetCustomerForDispatchedOrders(cust))">Dispatched orders </button></td>
+              <td><button class="btn btn-info" @onclick="(() => SetCustomerForActiveOrders(cust))">Active orders</button></td>
+              <td><button class="btn btn-danger" @onclick="(() => DeleteCustomer(cust))">Delete</button></td>
+              <td><button class="btn btn-info" @onclick="(() => SetCustomerForEdit(cust))">Edit</button></td>
+            </tr>
+            <tr>
+
+              @if (dispatchedOrders != null)
+              {
+                @if (dispatchedOrders.Any())
+                {
+                  int counter = 0;
+                  <td colspan="7">
+
+
+                    @foreach (var order in dispatchedOrders)
+                    {
+                      <table class="table table-bordered">
+                        @if (cust.Id == order.CustomerId)
+                        {
+
+                          @if (counter == 0)
+                          {
+                            <thead class="thead-light">
+                              <tr>
+                                <th>OrderDate</th>
+                                <th>Delivery Address</th>
+                                <th>Payment done</th>
+                                <th>Dispatched</th>
+                              </tr>
+                            </thead>
+                          }
+
+
+                          <tbody>
+                            <tr>
+                              <td>@order.OrderDate</td>
+                              <td>@order.DeliveryAddress</td>
+                              <td>
+                                @if (order.PaymentCompleted == true)
+                                {
+                                  <p>Paid</p>
+                                }
+                                else
+                                {
+                                  <p>Not paid</p>
+                                }
+                              </td>
+                              <td>
+                                @if (order.Dispatched == true)
+                                {
+                                  <p>Dispatched</p>
+                                }
+                                else
+                                {
+                                  <p>Not dispatched</p>
+                                }
+                              </td>
+                            </tr>
+                          </tbody>
+
+                        }
+                      </table>
+                      counter++;
+                    }
+
+                  </td>
+                }
+                else if (DispatchedCustomer.Id == cust.Id)
+                {
+                  <td colspan="7" align="center"><p>No dispatched orders found</p></td>
+
+                }
+              }
+
+            </tr>
+            <tr>
+
+              @if (activeOrders != null)
+              {
+                @if (activeOrders.Any())
+                {
+                  <td colspan="7">
+                    @foreach (var order in activeOrders)
+                    {
+                      @if (cust.Id == order.CustomerId)
+                      {
+                        <table class="table table-bordered">
+                          <thead class="thead-light">
+                            <tr>
+                              <th>OrderDate</th>
+                              <th>Delivery Address</th>
+                              <th>Payment done</th>
+                              <th>Dispatched</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>@order.OrderDate</td>
+                              <td>@order.DeliveryAddress</td>
+                              <td>
+                                @if (order.PaymentCompleted == true)
+                                {
+                                  <p>Paid</p>
+                                }
+                                else
+                                {
+                                  <p>Not paid</p>
+                                }
+                              </td>
+                              <td>
+                                @if (@order.Dispatched == true)
+                                {
+                                  <p>Dispatched</p>
+                                }
+                                else
+                                {
+                                  <p>Not dispatched</p>
+                                }
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      }
+                    }
+                  </td>
+                }
+                else if (ActiveCustomer.Id == cust.Id)
+                {
+                  <td colspan="7" align="center"><p>No active orders found</p></td>
+
+                }
+              }
+
+            </tr>
+          }
+
+        </tbody>
+      </table>
+
+
+
 
       @if (UpdateCustomer.Id > 0)
       {
@@ -211,7 +210,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="form-group">
-              @*Binder respektive värde nedanför till objektet NewEmployee*@
               <label for="name">Name</label>
               <input type="type" id="name" class="form-control" @bind-value="@UpdateCustomer.Name" />
             </div>
@@ -237,7 +235,6 @@
 
     </div>
 
-  </div>
 }
 else if (loadFailed)
 {
@@ -248,114 +245,114 @@ else
   <h3>Loading...</h3>
 }
 
-@code {
-  private List<Customer> customers;
-  private List<Order> dispatchedOrders;
-  private List<Order> activeOrders;
-  private bool loadFailed;
-  Customer NewCustomer = new Customer();
-  Customer UpdateCustomer = new Customer();
-  Customer DispatchedCustomer = new Customer();
-  Customer ActiveCustomer = new Customer();
+  @code {
+    private List<Customer> customers;
+    private List<Order> dispatchedOrders;
+    private List<Order> activeOrders;
+    private bool loadFailed;
+    Customer NewCustomer = new Customer();
+    Customer UpdateCustomer = new Customer();
+    Customer DispatchedCustomer = new Customer();
+    Customer ActiveCustomer = new Customer();
 
-  /// <summary>
-  /// Overriding OnInitializedAsync method for diplaying Customers.
-  /// </summary>
-  /// <returns></returns>
-  protected override async Task OnInitializedAsync()
-  {
-    customers = await customerRepo.GetCustomerAsync();
-  }
-
-  /// <summary>
-  /// Add a new Cutomer by calling the repository. Create a new object to erase the old.
-  /// </summary>
-  /// <returns></returns>
-  private async Task AddNewCustomer()
-  {
-    try
+    /// <summary>
+    /// Overriding OnInitializedAsync method for diplaying Customers.
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task OnInitializedAsync()
     {
-      loadFailed = false;
-      await customerRepo.AddCustomerAsync(NewCustomer);
-      NewCustomer = new Customer();
+      customers = await customerRepo.GetCustomerAsync();
+    }
+
+    /// <summary>
+    /// Add a new Cutomer by calling the repository. Create a new object to erase the old.
+    /// </summary>
+    /// <returns></returns>
+    private async Task AddNewCustomer()
+    {
+      try
+      {
+        loadFailed = false;
+        await customerRepo.AddCustomerAsync(NewCustomer);
+        NewCustomer = new Customer();
+        await UpdateGUI();
+      }
+      catch (Exception ex)
+      {
+        loadFailed = true;
+      }
+    }
+
+    /// <summary>
+    /// Delete a customer by calling method in repository.
+    /// </summary>
+    /// <param name="customer"></param>
+    /// <returns></returns>
+    private async Task DeleteCustomer(Customer customer)
+    {
+      await customerRepo.DeleteCustomerAsync(customer);
       await UpdateGUI();
     }
-    catch (Exception ex)
+
+    /// <summary>
+    /// Setting customer for edit.
+    /// </summary>
+    /// <param name="selected">Customer to set to object in method</param>
+    private void SetCustomerForEdit(Customer selected)
     {
-      loadFailed = true;
+      UpdateCustomer = selected;
+    }
+    /// <summary>
+    /// Edit a customer by calling method in repository.
+    /// </summary>
+    /// <returns></returns>
+    private async Task EditCustomer()
+    {
+      await customerRepo.EditCustomerAsync(UpdateCustomer);
+      UpdateCustomer = new Customer();
+      await UpdateGUI();
+    }
+
+    /// <summary>
+    /// Sets customer to show active orders and then showing dispatched orders by calling method in repository. Setting active customer to new to not display the active customer on the page.
+    /// </summary>
+    /// <param name="selected">Customer to set to object in method</param>
+    /// <returns></returns>
+    public async Task SetCustomerForDispatchedOrders(Customer selected)
+    {
+      if (activeOrders != null)
+      {
+        activeOrders.Clear();
+      }
+      ActiveCustomer = new Customer();
+      DispatchedCustomer = selected;
+      dispatchedOrders = await customerRepo.ShowDispatchedOrdersByCustomer(DispatchedCustomer);
+      await UpdateGUI();
+    }
+
+    /// <summary>
+    /// Sets customer to show active order and then showing active orderse by calling method in repository. Setting active customer to new to not display the active customer on the page.
+    /// </summary>
+    /// <param name="selected">Customer to set to object in method</param>
+    /// <returns></returns>
+    public async Task SetCustomerForActiveOrders(Customer selected)
+    {
+      if (dispatchedOrders != null)
+      {
+        dispatchedOrders.Clear();
+      }
+      DispatchedCustomer = new Customer();
+      ActiveCustomer = selected;
+      activeOrders = await customerRepo.ShowActiveOrdersByCustomer(ActiveCustomer);
+      await UpdateGUI();
+    }
+
+    /// <summary>
+    /// Updates the GUI by fetching from database async.
+    /// </summary>
+    /// <returns></returns>
+    private async Task UpdateGUI()
+    {
+      customers = await customerRepo.GetCustomerAsync();
     }
   }
-
-  /// <summary>
-  /// Delete a customer by calling method in repository.
-  /// </summary>
-  /// <param name="customer"></param>
-  /// <returns></returns>
-  private async Task DeleteCustomer(Customer customer)
-  {
-    await customerRepo.DeleteCustomerAsync(customer);
-    await UpdateGUI();
-  }
-
-  /// <summary>
-  /// Setting customer for edit.
-  /// </summary>
-  /// <param name="selected">Customer to set to object in method</param>
-  private void SetCustomerForEdit(Customer selected)
-  {
-    UpdateCustomer = selected;
-  }
-  /// <summary>
-  /// Edit a customer by calling method in repository.
-  /// </summary>
-  /// <returns></returns>
-  private async Task EditCustomer()
-  {
-    await customerRepo.EditCustomerAsync(UpdateCustomer);
-    UpdateCustomer = new Customer();
-    await UpdateGUI();
-  }
-
-  /// <summary>
-  /// Sets customer to show active orders and then showing dispatched orders by calling method in repository. Setting active customer to new to not display the active customer on the page.
-  /// </summary>
-  /// <param name="selected">Customer to set to object in method</param>
-  /// <returns></returns>
-  public async Task SetCustomerForDispatchedOrders(Customer selected)
-  {
-    if (activeOrders != null)
-    {
-      activeOrders.Clear();
-    }
-    ActiveCustomer = new Customer();
-    DispatchedCustomer = selected;
-    dispatchedOrders = await customerRepo.ShowDispatchedOrdersByCustomer(DispatchedCustomer);
-    await UpdateGUI();
-  }
-
-  /// <summary>
-  /// Sets customer to show active order and then showing active orderse by calling method in repository. Setting active customer to new to not display the active customer on the page.
-  /// </summary>
-  /// <param name="selected">Customer to set to object in method</param>
-  /// <returns></returns>
-  public async Task SetCustomerForActiveOrders(Customer selected)
-  {
-    if (dispatchedOrders != null)
-    {
-      dispatchedOrders.Clear();
-    }
-    DispatchedCustomer = new Customer();
-    ActiveCustomer = selected;
-    activeOrders = await customerRepo.ShowActiveOrdersByCustomer(ActiveCustomer);
-    await UpdateGUI();
-  }
-
-  /// <summary>
-  /// Updates the GUI by fetching from database async.
-  /// </summary>
-  /// <returns></returns>
-  private async Task UpdateGUI()
-  {
-    customers = await customerRepo.GetCustomerAsync();
-  }
-}
