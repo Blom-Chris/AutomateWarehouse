@@ -14,11 +14,21 @@ namespace AutomateWarehouse.Data
     {
       applicationDbContext = context;
     }
+
+    /// <summary>
+    /// Fetching all customer from the database.
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<Customer>> GetCustomerAsync()
     {
       return await applicationDbContext.Customers.ToListAsync();
     }
 
+    /// <summary>
+    /// Adding customer to database.
+    /// </summary>
+    /// <param name="customer">Customer to add to database.</param>
+    /// <returns></returns>
     public async Task<Customer> AddCustomerAsync(Customer customer)
     {
       try
@@ -33,6 +43,11 @@ namespace AutomateWarehouse.Data
       return customer;
     }
 
+    /// <summary>
+    /// Deletng customer from the database.
+    /// </summary>
+    /// <param name="customer">Customer to be deleted.</param>
+    /// <returns></returns>
     public async Task<Customer> DeleteCustomerAsync(Customer customer)
     {
       try
@@ -47,6 +62,11 @@ namespace AutomateWarehouse.Data
       return customer;
     }
 
+    /// <summary>
+    /// Edit selected customer in the database.
+    /// </summary>
+    /// <param name="customer">Customer to be edited.</param>
+    /// <returns></returns>
     public async Task<Customer> EditCustomerAsync(Customer customer)
     {
       try
@@ -67,11 +87,21 @@ namespace AutomateWarehouse.Data
       return customer;
     }
 
+    /// <summary>
+    /// For showing the orders that are dispatched by customer.
+    /// </summary>
+    /// <param name="customer">Customer whos orders are dispatched.</param>
+    /// <returns></returns>
     public async Task<List<Order>> ShowDispatchedOrdersByCustomer(Customer customer)
     {
       return await applicationDbContext.Orders.Where(o => o.Dispatched == true).Where(p => p.CustomerId == customer.Id).ToListAsync();
     }
 
+    /// <summary>
+    /// Show active orders for certain customer.
+    /// </summary>
+    /// <param name="customer">Customer whos order are active.</param>
+    /// <returns></returns>
     public async Task<List<Order>> ShowActiveOrdersByCustomer(Customer customer)
     {
       return await applicationDbContext.Orders.Where(o => o.Dispatched == false).Where(p => p.CustomerId == customer.Id).ToListAsync();
