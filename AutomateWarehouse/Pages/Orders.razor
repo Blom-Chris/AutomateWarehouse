@@ -30,9 +30,7 @@
                     <label for="address">Delivery address</label>
                     <input type="type" id="address" class="form-control" @bind-value="@newOrder.DeliveryAddress" />
                     <br>
-                    <button class="btn btn-info" type="submit">
-                        Add Order
-                    </button>
+                    <button class="btn btn-success" type="submit">Add Order</button>
                 </div>
             </EditForm>
         </div>
@@ -114,7 +112,7 @@
         <button class="btn btn-info" @onclick="(() => GetAllOrdersAsync())">Show all orders</button>
         <button class="btn btn-info" @onclick="(() => GetAllDispatchedOrdersAsync())">Show all dispatched orders</button>
         <button class="btn btn-info" @onclick="(() => GetAllPendingdOrdersAsync())">Show all pending orders</button>
-        <button class="btn btn-info" @onclick="(() => DispatchAllOrders())">Process all orders</button>
+        <button class="btn btn-success" @onclick="(() => DispatchAllOrders())">Process all orders</button>
     </div>
     
     <br/>
@@ -138,46 +136,46 @@
             {
                 @foreach (var order in orders)
                 {
-                    <tr>
-                        <td>@order.Id</td>
-                        <td>@order.CustomerId</td>
-                        <td>@order.OrderDate</td>
-                        <td>@order.DeliveryAddress</td>
-                        <td>
-                            @if (order.PaymentCompleted == true)
-                            {
-                                <p>Paid</p>
-                            }
-                            else
-                            {
-                                <p>Not paid</p>
-                            }
-                        </td>
-                        <td>
-                            @if (order.Dispatched == true)
-                            {
-                                <p>Dispatched</p>
-                            }
-                            else
-                            {
-                                <p>Not dispatched</p>
-                            }
-                        </td>
-                        <td><button class="btn btn-info" @onclick="(() => SetOrderForAddingProduct (order))">Add product</button></td>
-                        <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
-                        <td><button class="btn btn-info" @onclick="(() => SetOrderForEdit (order))">Edit</button></td>
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.CustomerId</td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@order.DeliveryAddress</td>
+                <td>
+                    @if (order.PaymentCompleted == true)
+                    {
+                        <p>Paid</p>
+                    }
+                    else
+                    {
+                        <p>Not paid</p>
+                    }
+                </td>
+                <td>
+                    @if (order.Dispatched == true)
+                    {
+                        <p>Dispatched</p>
+                    }
+                    else
+                    {
+                        <p>Not dispatched</p>
+                    }
+                </td>
+                <td><button class="btn btn-info" @onclick="(() => SetOrderForAddingProduct (order))">Add product</button></td>
+                <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show order lines</button></td>
+                <td><button class="btn btn-info" @onclick="(() => SetOrderForEdit (order))">Edit</button></td>
 
-                        <td>
-                            @if (!order.PaymentCompleted)
-                            {
-                                <input type="button" name="PayButton" class="btn btn-info" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
-                            }
-                            else
-                            {
-                                <input type="button" name="UndoPayButton" class="btn btn-info" id="UndoPayButton" value="UndoPay" @onclick="(() => UndoPayment(order))" />
-                            }
-                        </td>
-                    </tr>
+                <td>
+                    @if (!order.PaymentCompleted)
+                    {
+                        <input type="button" name="PayButton" class="btn btn-success" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
+                    }
+                    else
+                    {
+                        <input type="button" name="UndoPayButton" class="btn btn-danger" id="UndoPayButton" value="UndoPay" @onclick="(() => UndoPayment(order))" />
+                    }
+                </td>
+            </tr>
 
                     <tr>
                         @if (orderLines != null)
