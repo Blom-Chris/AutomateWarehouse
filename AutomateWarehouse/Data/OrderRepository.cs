@@ -164,9 +164,10 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
-            IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.Dispatched==true);
-            return dbEntry.ToList();
-        }
+            //IEnumerable<Order> dbEntry =  applicationDbContext.Orders.Where(o => o.Dispatched==true);
+            //return dbEntry.ToListAsync();
+            return await applicationDbContext.Orders.Where(o => o.Dispatched == true).ToListAsync();
+    }
 
         /// <summary>
         /// Filters the table to only show all pending orders.
