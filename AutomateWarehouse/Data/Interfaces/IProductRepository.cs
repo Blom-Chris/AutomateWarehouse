@@ -12,7 +12,7 @@ namespace AutomateWarehouse.Data
         Task<Product> RemoveProductAsync(Product product);
         Task<Product> EditProductsAsync(Product product);
         Task<List<Product>> EmptyStock();
-        Product SetRestockDate(Product product);
+        void SetRestockDate(Product product);
 
     }
 }

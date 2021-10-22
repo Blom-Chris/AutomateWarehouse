@@ -148,13 +148,20 @@ namespace AutomateWarehouse.Data
                 o.Items.All(i => i.Quantity <= i.Product.Stock) && o.Dispatched == false);
             foreach(Order o in dbEntry)
             {
-
-                foreach (OrderLine i in o.Items)
-                {
-                        i.Product.Stock -= i.Quantity;
-                }
-               
                 o.Dispatched = true;
+                foreach (OrderLine ol in o.Items)
+                {
+                        ol.Product.Stock -= ol.Quantity;
+                    if (ol.Product.Stock < 0)
+                    {
+                        ol.Product.Stock += ol.Quantity;
+                        o.Dispatched = false;
+                    }
+                    else if (ol.Product.Stock == 0)
+                    {
+                        SetRestockDate(ol.Product);
+                    }
+                }
             }
             await applicationDbContext.SaveChangesAsync();
         }
@@ -177,6 +184,14 @@ namespace AutomateWarehouse.Data
         {
             IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==false).ToListAsync();
             return dbEntry.ToList();
+        }
+
+        public void SetRestockDate(Product p)
+        {
+            if (p.Stock == 0)
+            {
+                p.RestockingDate = DateTime.Today.AddDays(10);
+            }
         }
     }
 }

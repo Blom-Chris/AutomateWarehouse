@@ -106,14 +106,13 @@ namespace AutomateWarehouse.Data
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public Product SetRestockDate(Product p)
+        public void SetRestockDate(Product p)
         {
             if(p.Stock == 0)
             {
                 p.RestockingDate = DateTime.Today.AddDays(10);
-                
             }
-            return p;
+            //return p;
         }
     }
 }
