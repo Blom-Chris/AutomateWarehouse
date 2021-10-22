@@ -169,50 +169,58 @@
             {
               @if (activeOrders.Any())
               {
-                <td colspan="7">
+              <td colspan="7">
                   @foreach (var order in activeOrders)
                   {
-                    @if (cust.Id == order.CustomerId)
-                    {
                       <table class="table table-bordered">
-                        <thead class="thead-light">
-                          <tr>
-                            <th>OrderDate</th>
-                            <th>Delivery Address</th>
-                            <th>Payment done</th>
-                            <th>Dispatched</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>@order.OrderDate</td>
-                            <td>@order.DeliveryAddress</td>
-                            <td>
-                              @if (order.PaymentCompleted == true)
-                              {
-                                <p>Paid</p>
-                              }
-                              else
-                              {
-                                <p>Not paid</p>
-                              }
-                            </td>
-                            <td>
-                              @if (@order.Dispatched == true)
-                              {
-                                <p>Dispatched</p>
-                              }
-                              else
-                              {
-                                <p>Not dispatched</p>
-                              }
-                            </td>
-                          </tr>
-                        </tbody>
+                          @if (cust.Id == order.CustomerId)
+                          {
+
+                              <thead class="thead-light">
+                                  <tr>
+                                      <th>OrderDate</th>
+                                      <th>Delivery Address</th>
+                                      <th>Payment done</th>
+                                      <th>Dispatched</th>
+                                  </tr>
+                              </thead>
+
+                              <tbody>
+                                  @foreach (var o in activeOrders)
+                                  {
+                                      <tr>
+                                          <td>@order.OrderDate</td>
+                                          <td>@order.DeliveryAddress</td>
+                                          <td>
+                                              @if (order.PaymentCompleted == true)
+                                              {
+                                                  <p>Paid</p>
+                                              }
+                                              else
+                                              {
+                                                  <p>Not paid</p>
+                                              }
+                                          </td>
+                                          <td>
+                                              @if (@order.Dispatched == true)
+                                              {
+                                                  <p>Dispatched</p>
+                                              }
+                                              else
+                                              {
+                                                  <p>Not dispatched</p>
+                                              }
+                                          </td>
+                                      </tr>
+
+                                  }
+                              </tbody>
+
+                          }
                       </table>
-                    }
+                      break;
                   }
-                </td>
+              </td>
               }
               else if (ActiveCustomer.Id == cust.Id)
               {

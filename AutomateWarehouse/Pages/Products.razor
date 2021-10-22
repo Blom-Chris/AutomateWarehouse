@@ -134,7 +134,6 @@
 
 @code {
     private List<Product> ProductsList;
-    //public string Filter { get; set; }
     public string FilterFunction { get; set; }
     Product newProduct = new Product();
     Product updateProduct = new Product();
@@ -151,13 +150,13 @@
     }
 
     /// <summary>
-    /// Create a new product. Sets a restocking date for the product and adds it to the DB.
+    /// Adds a new product to the DB
     /// Also clears the newProduct object from the added products attributes.
     /// </summary>
     /// <returns></returns>
     private async Task AddNewProduct()
     {
-        await productRepository.SetRestockDate(newProduct);
+        //productRepository.SetRestockDate(newProduct);
         await productRepository.AddProductAsync(newProduct);
 
         newProduct = new Product();
