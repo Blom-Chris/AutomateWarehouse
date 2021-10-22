@@ -27,7 +27,7 @@
                     </select>
                     <br>
                     <label for="address">Delivery address</label>
-                    <input type="type" id="address" class="form-control" @bind-value="@newOrder.DeliveryAddress" />
+                    <input type="text" id="address" class="form-control" @bind-value="@newOrder.DeliveryAddress" />
                     <br>
                     <button class="btn btn-success" type="submit">Add Order</button>
                 </div>
@@ -47,7 +47,7 @@
                         <p>Order Id: @updateOrder.Id</p>
                         <br>
                         <label for="deliveryAddress">Delivery address</label>
-                        <input type="type" id="deliveryAddress" class="form-control" @bind-value="@updateOrder.DeliveryAddress" />
+                        <input type="text" id="deliveryAddress" class="form-control" @bind-value="@updateOrder.DeliveryAddress" />
                     </div>
                     <div class="text-center p-3 m-3">
                         <button class="btn btn-success m-3" type="submit">Edit Order</button>
@@ -121,6 +121,7 @@
             <tr>
                 <th>Order id</th>
                 <th>Customer id</th>
+                <th>Customer name</th>
                 <th>Order date</th>
                 <th>Delivery address</th>
                 <th>Payment completed</th>
@@ -139,6 +140,7 @@
             <tr>
                 <td>@order.Id</td>
                 <td>@order.CustomerId</td>
+                <td>@order.Customer.Name</td>
                 <td>@order.OrderDate</td>
                 <td>@order.DeliveryAddress</td>
                 <td>

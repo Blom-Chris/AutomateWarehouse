@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AutomateWarehouse.Data.Models;
 
 namespace AutomateWarehouse.Data
 {
@@ -33,11 +34,12 @@ namespace AutomateWarehouse.Data
         {
             try
             {
-                SetRestockDate(p);
+                RestockDate restock = new(p);
+                //SetRestockDate(p);
                 applicationDbContext.Products.Add(p);
                 await applicationDbContext.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -56,7 +58,7 @@ namespace AutomateWarehouse.Data
                 applicationDbContext.Remove(p);
                 await applicationDbContext.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -106,13 +108,12 @@ namespace AutomateWarehouse.Data
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public void SetRestockDate(Product p)
-        {
-            if(p.Stock == 0)
-            {
-                p.RestockingDate = DateTime.Today.AddDays(10);
-            }
-            //return p;
-        }
+        //public void SetRestockDate(Product p)
+        //{
+        //    if(p.Stock == 0)
+        //    {
+        //        p.RestockingDate = DateTime.Today.AddDays(10);
+        //    }
+        //}
     }
 }
