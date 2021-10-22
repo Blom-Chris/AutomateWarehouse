@@ -96,9 +96,9 @@
 
             @if (dispatchedOrders != null)
             {
-              @if (dispatchedOrders.Any())
+              @if (dispatchedOrders.Any() && DispatchedCustomer.Id == cust.Id)
               {
-                int counter = 0;
+                 
                 <td colspan="7">
 
 
@@ -108,8 +108,7 @@
                       @if (cust.Id == order.CustomerId)
                       {
 
-                        @if (counter == 0)
-                        {
+                        
                           <thead class="thead-light">
                             <tr>
                               <th>OrderDate</th>
@@ -118,39 +117,43 @@
                               <th>Dispatched</th>
                             </tr>
                           </thead>
+                          
+
+
+                    <tbody class="margin-0 padding-0">
+                        @foreach (var c in dispatchedOrders)
+                        {
+                            <tr>
+                                <td>@c.OrderDate</td>
+                                <td>@c.DeliveryAddress</td>
+                                <td>
+                                    @if (order.PaymentCompleted == true)
+                                    {
+                                        <p>Paid</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Not paid</p>
+                                    }
+                                </td>
+                                <td>
+                                    @if (order.Dispatched == true)
+                                    {
+                                        <p>Dispatched</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Not dispatched</p>
+                                    }
+                                </td>
+                            </tr>
                         }
-
-
-                        <tbody>
-                          <tr>
-                            <td>@order.OrderDate</td>
-                            <td>@order.DeliveryAddress</td>
-                            <td>
-                              @if (order.PaymentCompleted == true)
-                              {
-                                <p>Paid</p>
-                              }
-                              else
-                              {
-                                <p>Not paid</p>
-                              }
-                            </td>
-                            <td>
-                              @if (order.Dispatched == true)
-                              {
-                                <p>Dispatched</p>
-                              }
-                              else
-                              {
-                                <p>Not dispatched</p>
-                              }
-                            </td>
-                          </tr>
                         </tbody>
 
                       }
                     </table>
-                    counter++;
+                      
+                      break;
                   }
 
                 </td>
@@ -162,12 +165,11 @@
               }
             }
 
-          </tr>
-          <tr>
+          
 
             @if (activeOrders != null)
             {
-              @if (activeOrders.Any())
+              @if (activeOrders.Any() && ActiveCustomer.Id == cust.Id)
               {
               <td colspan="7">
                   @foreach (var order in activeOrders)
@@ -185,7 +187,7 @@
                                   </tr>
                               </thead>
 
-                              <tbody>
+                              <tbody  class="margin-0 padding-0">
                                   @foreach (var o in activeOrders)
                                   {
                                       <tr>
