@@ -15,11 +15,20 @@ namespace AutomateWarehouse.Data
             applicationDbContext = context;
         }
 
+        /// <summary>
+        /// Fetch a list with all order from the DB
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Order>> GetAllOrdersAsync()
         {
             return await applicationDbContext.Orders.ToListAsync();
         }
 
+        /// <summary>
+        /// Adds a new order to the DB
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public async Task<Order> AddNewOrderAsync(Order order)
         {
             try
@@ -35,6 +44,11 @@ namespace AutomateWarehouse.Data
             return order;
         }
 
+        /// <summary>
+        /// Edits an exisiting order in the DB
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public async Task<Order> EditOrderAsync(Order order)
         {
             try
@@ -54,7 +68,11 @@ namespace AutomateWarehouse.Data
         }
 
 
-
+        /// <summary>
+        /// Sets an exisiting order to true (i.e. Paid)
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public async Task<Order> PayOrderAsync(Order order)
         {
             try
@@ -73,6 +91,11 @@ namespace AutomateWarehouse.Data
             return order;
         }
 
+        /// <summary>
+        /// Sets an already paid order to false (i.e. undo payment)
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public async Task<Order> UndoPaymentAsync(Order order)
         {
             try
@@ -91,6 +114,11 @@ namespace AutomateWarehouse.Data
             return order;
         }
 
+        /// <summary>
+        /// Sets an already dispatched order to false (i.e. undo dispatched)
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public async Task<Order> UndoDispatchAsync(Order order)
         {
             try
@@ -109,6 +137,10 @@ namespace AutomateWarehouse.Data
             return order;
         }
 
+        /// <summary>
+        /// Processes all existing order that are checked as paid but not dispatched yet. (i.e. mark them as dispatched)
+        /// </summary>
+        /// <returns></returns>
         public async Task ProcessOrderAsync()
         {
             IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.PaymentCompleted == true &&
@@ -126,12 +158,20 @@ namespace AutomateWarehouse.Data
             await applicationDbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Filters the table to only show all dispatched orders.
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
             IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.Dispatched==true);
             return dbEntry.ToList();
         }
 
+        /// <summary>
+        /// Filters the table to only show all pending orders.
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Order>> GetAllPendingOrdersAsync()
         {
             IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.Dispatched==false);
