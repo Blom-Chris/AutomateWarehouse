@@ -9,12 +9,10 @@ namespace AutomateWarehouse.Data
   public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext applicationDbContext;
-        //List<Product> productList { get; set; }
 
         public ProductRepository(ApplicationDbContext context)
         {
             applicationDbContext = context;
-            //productList = new List<Product>();
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
