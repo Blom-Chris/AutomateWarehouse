@@ -53,11 +53,12 @@ namespace AutomateWarehouse.Data
         {
             try
             {
-                Order dbEntry = applicationDbContext.Orders.FirstOrDefault(o => o.Id == order.Id);
+                //TEst
+                Order dbEntry = await applicationDbContext.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
                 if (dbEntry != null)
                 {
                     dbEntry.DeliveryAddress = order.DeliveryAddress;
-                    applicationDbContext.SaveChanges();
+                     applicationDbContext.SaveChanges();
                 }
             }
             catch (Exception)

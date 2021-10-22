@@ -80,7 +80,7 @@ namespace AutomateWarehouse.Data
                     dbEntry.Price = product.Price;
                     dbEntry.Stock = product.Stock;
                     dbEntry.RestockingDate = product.RestockingDate;
-                    applicationDbContext.SaveChanges();
+                    await applicationDbContext.SaveChangesAsync();
                 }
             }
             catch (Exception)
@@ -96,7 +96,7 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task<List<Product>> EmptyStock()
         {
-            IEnumerable<Product> result = applicationDbContext.Products.Where(a => a.Stock < 1);
+            IEnumerable<Product> result = await applicationDbContext.Products.Where(a => a.Stock < 1).ToListAsync();
             return result.ToList();
         }
 
@@ -109,7 +109,7 @@ namespace AutomateWarehouse.Data
         {
             if(p.Stock == 0)
             {
-                p.RestockingDate = DateTime.Today.AddDays(10);
+                p.RestockingDate =  DateTime.Today.AddDays(10);
                 
             }
             return p;
