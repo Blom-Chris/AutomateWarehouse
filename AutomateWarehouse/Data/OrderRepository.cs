@@ -164,7 +164,7 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
-            IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.Dispatched==true);
+            IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==true).ToListAsync();
             return dbEntry.ToList();
         }
 
@@ -174,7 +174,7 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task<List<Order>> GetAllPendingOrdersAsync()
         {
-            IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.Dispatched==false);
+            IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==false).ToListAsync();
             return dbEntry.ToList();
         }
     }

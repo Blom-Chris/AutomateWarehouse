@@ -71,7 +71,7 @@ namespace AutomateWarehouse.Data
     {
       try
       {
-        Customer dbEntry = applicationDbContext.Customers.FirstOrDefault(c => c.Id == customer.Id);
+        Customer dbEntry = await applicationDbContext.Customers.FirstOrDefaultAsync(c => c.Id == customer.Id);
         if (dbEntry != null)
         {
           dbEntry.Name = customer.Name;
