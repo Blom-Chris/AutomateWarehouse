@@ -33,7 +33,7 @@ namespace AutomateWarehouse.Data
         {
             try
             {
-                await SetRestockDate(p);
+                SetRestockDate(p);
                 applicationDbContext.Products.Add(p);
                 await applicationDbContext.SaveChangesAsync();
             }
@@ -105,11 +105,11 @@ namespace AutomateWarehouse.Data
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public async Task<Product> SetRestockDate(Product p)
+        public Product SetRestockDate(Product p)
         {
             if(p.Stock == 0)
             {
-                p.RestockingDate =  DateTime.Today.AddDays(10);
+                p.RestockingDate = DateTime.Today.AddDays(10);
                 
             }
             return p;
