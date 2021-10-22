@@ -164,10 +164,9 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
-            //IEnumerable<Order> dbEntry =  applicationDbContext.Orders.Where(o => o.Dispatched==true);
-            //return dbEntry.ToListAsync();
-            return await applicationDbContext.Orders.Where(o => o.Dispatched == true).ToListAsync();
-    }
+            IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==true).ToListAsync();
+            return dbEntry.ToList();
+        }
 
         /// <summary>
         /// Filters the table to only show all pending orders.
@@ -175,7 +174,7 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task<List<Order>> GetAllPendingOrdersAsync()
         {
-            IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.Dispatched==false);
+            IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==false).ToListAsync();
             return dbEntry.ToList();
         }
     }
