@@ -33,9 +33,6 @@ namespace AutomateWarehouse.Data
         {
             try
             {
-                // Ska RestockingDate verkligen sättas när en ny produkt läggs till?
-                // Borde bara vara när alla orders processeras och orderstocken uppdateras,
-                // då ska alla orders som får 0 i kvantitet också få ett RestockDate!
                 SetRestockDate(p);
                 applicationDbContext.Products.Add(p);
                 await applicationDbContext.SaveChangesAsync();
@@ -104,7 +101,8 @@ namespace AutomateWarehouse.Data
         }
 
         /// <summary>
-        /// Sets the restocking date for a product to today +10.
+        /// Sets the restocking date for a product to today +10 if its out of stock.
+        /// If its not, it gets a default value which shows as n/a in the table.
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
