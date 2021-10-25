@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutomateWarehouse.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutomateWarehouse.Data
@@ -72,6 +73,10 @@ namespace AutomateWarehouse.Data
         {
             try
             {
+                if (product.Stock == 0)
+                {
+                    product.RestockingDate = RestockDate.SetRestockDate(product);
+                }
                 Product dbEntry = applicationDbContext.Products.FirstOrDefault(a => a.Id == product.Id);
                 if (dbEntry != null)
                 {
