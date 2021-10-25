@@ -41,5 +41,23 @@ namespace AutomateWarehouse.Data
                 throw;
             }
         }
+
+    /// <summary>
+    /// Deletng customer from the database.
+    /// </summary>
+    /// <param name="customer">Customer to be deleted.</param>
+    /// <returns></returns>
+    public async Task DeleteOrderLineAsync(OrderLine orderLine)
+    {
+      try
+      {
+        applicationDbContext.Remove(orderLine);
+        await applicationDbContext.SaveChangesAsync();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
     }
+  }
 }
