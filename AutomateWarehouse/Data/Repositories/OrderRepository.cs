@@ -149,6 +149,7 @@ namespace AutomateWarehouse.Data
 
             IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.PaymentCompleted == true &&
                 o.Items.All(i => i.Quantity <= i.Product.Stock) && o.Dispatched == false);
+
             foreach (Order o in dbEntry)
             {
                 o.Dispatched = true;

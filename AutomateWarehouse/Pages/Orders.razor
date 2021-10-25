@@ -164,7 +164,7 @@
                     }
                 </td>
                 <td>
-                    @if (order.Dispatched == true)
+                    @if (order.Dispatched == true || order.PaymentCompleted == true)
                     {
                         <p>n/a</p>
                     }
@@ -175,7 +175,7 @@
                 </td>
                 <td><button class="btn btn-info" @onclick="(() => ShowAllOrderLines(order))">Show</button></td>
                 <td>
-                    @if (order.Dispatched == true)
+                    @if (order.Dispatched == true || order.PaymentCompleted == true)
                     {
                         <p>n/a</p>
                     }
@@ -189,6 +189,10 @@
                     @if (!order.PaymentCompleted)
                     {
                         <input type="button" name="PayButton" class="btn btn-success" id="PayButton" value="Pay" @onclick="(() => PayOrderAsync(order))" />
+                    }
+                    else if (order.Dispatched == true)
+                    {
+                        <input type="button" disabled name="UndoPayButton" class="btn btn-danger" id="UndoPayButton" value="UndoPay" @onclick="(() => UndoPayment(order))" />
                     }
                     else
                     {
@@ -238,7 +242,11 @@
                                                         <td>@ol.Quantity</td>
                                                         <td>@ol.OrderId</td>
                                                         <td>@ol.Order.Customer.Name</td>
-                                                        @if (order.Dispatched == false)
+                                                        @if (order.PaymentCompleted == true)
+                                                        {
+                                                            <td><button disabled class="btn btn-danger" @onclick="(() => DeleteProduct(ol))">Delete</button></td>
+                                                        }
+                                                        else
                                                         {
                                                             <td><button class="btn btn-danger" @onclick="(() => DeleteProduct(ol))">Delete</button></td>
                                                         }
