@@ -203,7 +203,7 @@
                             @if (orderLines.Any() && currentOrder.Id == order.Id)
                             {
 
-                                <td colspan="10">
+                                <td colspan="11">
 
                                     @foreach (var orderLine in orderLines)
                                     {
@@ -221,22 +221,28 @@
                                                         <th>Quantity</th>
                                                         <th>Order Id</th>
                                                         <th>Customer name</th>
-                                                        <th>Delete Product</th>
-                                                    </tr>
+                                                        @if (order.Dispatched == false)
+                                                        {
+                                                            <th>Delete Product</th>
+                                                        }
+                                                        </tr>
                                                 </thead>
 
                                                 <tbody class="margin-0 padding-0">
                                                     @foreach (var ol in orderLines)
                                                     {
-                                                  <tr>
-                                                    <td>@ol.Id</td>
-                                                    <td>@ol.ProductId</td>
-                                                    <td>@ol.Product.Name</td>
-                                                    <td>@ol.Quantity</td>
-                                                    <td>@ol.OrderId</td>
-                                                    <td>@ol.Order.Customer.Name</td>
-                                                    <td><button class="btn btn-danger" @onclick="(() => DeleteProduct(ol))">Delete</button></td>
-                                                  </tr>
+                                                    <tr>
+                                                        <td>@ol.Id</td>
+                                                        <td>@ol.ProductId</td>
+                                                        <td>@ol.Product.Name</td>
+                                                        <td>@ol.Quantity</td>
+                                                        <td>@ol.OrderId</td>
+                                                        <td>@ol.Order.Customer.Name</td>
+                                                        @if (order.Dispatched == false)
+                                                        {
+                                                            <td><button class="btn btn-danger" @onclick="(() => DeleteProduct(ol))">Delete</button></td>
+                                                        }
+                                                    </tr>
                                                     }
                                                 </tbody>
                                             }
@@ -248,7 +254,7 @@
                             }
                             else if (currentOrder.Id == order.Id)
                             {
-                                <td colspan="10" align="center">
+                                <td colspan="11" align="center">
                                     <p>No order lines found</p>
                                 </td>
                             }

@@ -163,8 +163,6 @@ namespace AutomateWarehouse.Data
                     else if (ol.Product.Stock == 0)
                     {
                         RestockDate restock = new(ol.Product);
-                        //restock.SetRestockDate(ol.Product);
-                        //SetRestockDate(ol.Product);
                     }
                 }
             }
