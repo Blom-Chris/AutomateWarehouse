@@ -27,8 +27,8 @@ namespace AutomateWarehouse.Data
     }
 
     private string _phone;
-    [Required(ErrorMessage = "Du måste fylla i ditt mobiltelefonnummer")]
-    [RegularExpression(pattern: @"^[0]{1}[0-9]{1,3}-[0-9]{5,9}$", ErrorMessage = "Formatet för mobilnummer ska vara xxxx-xxxxxxxxx")]
+    [Required(ErrorMessage = "You must enter a phone number")]
+    [RegularExpression(pattern: @"^[0]{1}[0-9]{1,3}-[0-9]{5,9}$", ErrorMessage = "The format for phone must follow: xxxx-xxxxxxxxx")]
     public string Phone 
     { 
       get { return _phone; }
@@ -36,8 +36,8 @@ namespace AutomateWarehouse.Data
     }
 
     private string _email;
-    [Required]
-    [RegularExpression(pattern: @"^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$", ErrorMessage = "Fel format för email.")]
+    [Required(ErrorMessage = "You must enter a email address")]
+    [RegularExpression(pattern: @"^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$", ErrorMessage = "Invalid email address.")]
     public string Email 
     { 
       get { return _email; }

@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutomateWarehouse.Data.Models;
 
 namespace AutomateWarehouse.Data
 {
   public class OrderRepository : IOrderRepository
   {
+
         private readonly ApplicationDbContext applicationDbContext;
 
         public OrderRepository(ApplicationDbContext context)
@@ -33,11 +35,11 @@ namespace AutomateWarehouse.Data
         {
             try
             {
-                order.OrderDate = DateTime.Now;                   //Lägga till datumet på något annat ställe?
+                order.OrderDate = DateTime.Now;
                 applicationDbContext.Orders.Add(order);
                 await applicationDbContext.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -144,17 +146,27 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task ProcessOrderAsync()
         {
+
             IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.PaymentCompleted == true &&
                 o.Items.All(i => i.Quantity <= i.Product.Stock) && o.Dispatched == false);
-            foreach(Order o in dbEntry)
+            foreach (Order o in dbEntry)
             {
-
-                foreach (OrderLine i in o.Items)
-                {
-                        i.Product.Stock -= i.Quantity;
-                }
-               
                 o.Dispatched = true;
+                foreach (OrderLine ol in o.Items)
+                {
+                    ol.Product.Stock -= ol.Quantity;
+                    if (ol.Product.Stock < 0)
+                    {
+                        ol.Product.Stock += ol.Quantity;
+                        o.Dispatched = false;
+                    }
+                    else if (ol.Product.Stock == 0)
+                    {
+                        RestockDate restock = new(ol.Product);
+                        //restock.SetRestockDate(ol.Product);
+                        //SetRestockDate(ol.Product);
+                    }
+                }
             }
             await applicationDbContext.SaveChangesAsync();
         }
@@ -178,5 +190,13 @@ namespace AutomateWarehouse.Data
             IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==false).ToListAsync();
             return dbEntry.ToList();
         }
+
+        //public void SetRestockDate(Product p)
+        //{
+        //    if (p.Stock == 0)
+        //    {
+        //        p.RestockingDate = DateTime.Today.AddDays(10);
+        //    }
+        //}
     }
 }

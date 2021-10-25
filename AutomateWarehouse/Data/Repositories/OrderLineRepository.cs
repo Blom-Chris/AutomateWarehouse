@@ -36,7 +36,7 @@ namespace AutomateWarehouse.Data
                 applicationDbContext.OrderLines.Add(orderLine);
                 await applicationDbContext.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

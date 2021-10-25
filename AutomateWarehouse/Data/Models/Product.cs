@@ -39,7 +39,7 @@ namespace AutomateWarehouse.Data
     }
 
     [Required]
-    [Range(1, 9999)]
+    [Range(0, 9999)]
     public double Price 
     {
       get { return _price; }
@@ -59,22 +59,5 @@ namespace AutomateWarehouse.Data
       get { return _restockingDate; }
       set { _restockingDate = value; }
     }
-
-
-    //    public DateTime _dateTime = DateTime.Today;
-    //public DateTime RestockingDate {
-    //        get
-    //        {
-    //            return _dateTime;
-    //        }
-    //        set {
-    //            if (Stock == 0)
-    //            {
-    //                _dateTime =_dateTime.AddDays(10);
-    //            }
-
-    //        }
-    //         }
   }
-
 }

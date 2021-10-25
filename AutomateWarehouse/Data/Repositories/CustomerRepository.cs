@@ -36,7 +36,7 @@ namespace AutomateWarehouse.Data
         applicationDbContext.Customers.Add(customer);
         await applicationDbContext.SaveChangesAsync();
       }
-      catch (Exception e)
+      catch (Exception)
       {
         throw;
       }
@@ -55,7 +55,7 @@ namespace AutomateWarehouse.Data
         applicationDbContext.Remove(customer);
         await  applicationDbContext.SaveChangesAsync();
       }
-      catch (Exception e)
+      catch (Exception)
       {
         throw;
       }
