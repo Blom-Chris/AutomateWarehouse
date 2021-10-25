@@ -120,7 +120,7 @@
                         <td>@prod.Description</td>
                         <td>@prod.Price</td>
                         <td>@prod.Stock</td>
-                        @if (prod.RestockingDate == default)
+                        @if (prod.Stock>0)
                         {
                             <td>n/a</td>
                         }

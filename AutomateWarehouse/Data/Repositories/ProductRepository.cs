@@ -75,9 +75,9 @@ namespace AutomateWarehouse.Data
       try
       {
         Product dbEntry = applicationDbContext.Products.FirstOrDefault(a => a.Id == product.Id);
-        if (product.Stock > 0)
+        if (product.Stock == 0)
         {
-          product.RestockingDate = default;
+          product.RestockingDate = RestockDate.SetRestockDate(product);
         }
 
         if (dbEntry != null)

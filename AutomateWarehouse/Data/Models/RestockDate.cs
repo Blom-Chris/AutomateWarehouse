@@ -19,12 +19,13 @@ namespace AutomateWarehouse.Data.Models
         /// If its not, it gets a default value which shows as n/a in the table.
         /// </summary>
         /// <param name="p"></param>
-        public void SetRestockDate(Product p)
+        public static DateTime SetRestockDate(Product p)
         {
             if (p.Stock == 0)
             {
                 p.RestockingDate = DateTime.Today.AddDays(10);
             }
+            return p.RestockingDate;
         }
     }
 }
