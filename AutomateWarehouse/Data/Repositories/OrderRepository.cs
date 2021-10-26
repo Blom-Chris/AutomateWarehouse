@@ -140,41 +140,39 @@ namespace AutomateWarehouse.Data
             return order;
         }
 
-        /// <summary>
-        /// Processes all existing order that are checked as paid but not dispatched yet. (i.e. mark them as dispatched)
-        /// </summary>
-        /// <returns></returns>
-        public async Task ProcessOrderAsync()
+    /// <summary>
+    /// Processes all existing order that are checked as paid but not dispatched yet. (i.e. mark them as dispatched)
+    /// </summary>
+    /// <returns></returns>
+    public async Task ProcessOrderAsync()
+    {
+      IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.PaymentCompleted == true &&
+          o.Items.All(i => i.Quantity <= i.Product.Stock) && o.Dispatched == false);
+      foreach (Order o in dbEntry)
+      {
+        o.Dispatched = true;
+        foreach (OrderLine ol in o.Items)
         {
-
-            IEnumerable<Order> dbEntry = applicationDbContext.Orders.Where(o => o.PaymentCompleted == true &&
-                o.Items.All(i => i.Quantity <= i.Product.Stock) && o.Dispatched == false);
-
-            foreach (Order o in dbEntry)
-            {
-                o.Dispatched = true;
-                foreach (OrderLine ol in o.Items)
-                {
-                    ol.Product.Stock -= ol.Quantity;
-                    if (ol.Product.Stock < 0)
-                    {
-                        ol.Product.Stock += ol.Quantity;
-                        o.Dispatched = false;
-                    }
-                    else if (ol.Product.Stock == 0)
-                    {
-                        RestockDate restock = new(ol.Product);
-                    }
-                }
-            }
-            await applicationDbContext.SaveChangesAsync();
+          ol.Product.Stock -= ol.Quantity;
+          if (ol.Product.Stock < 0)
+          {
+            ol.Product.Stock += ol.Quantity;
+            o.Dispatched = false;
+          }
+          else if (ol.Product.Stock == 0)
+          {
+            RestockDate restock = new(ol.Product);
+          }
         }
+      }
+      await applicationDbContext.SaveChangesAsync();
+    }
 
-        /// <summary>
-        /// Filters the table to only show all dispatched orders.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<Order>> GetAllDispatchedOrdersAsync()
+    /// <summary>
+    /// Filters the table to only show all dispatched orders.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Order>> GetAllDispatchedOrdersAsync()
         {
             IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==true).ToListAsync();
             return dbEntry.ToList();
