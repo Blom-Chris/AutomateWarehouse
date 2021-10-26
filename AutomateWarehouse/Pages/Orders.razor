@@ -446,7 +446,6 @@
     orderLines = await orderLineRepo.GetCurrentOrderLinesAsync(currentOrder);
     ListOfProducts = await productRepo.GetAllProductsAsync();
     ListOfCustomers = await customerRepo.GetCustomerAsync();
-    await UpdateGUI();
   }
 
   /// <summary>
