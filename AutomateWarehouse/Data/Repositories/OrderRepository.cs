@@ -55,7 +55,6 @@ namespace AutomateWarehouse.Data
         {
             try
             {
-                //TEst
                 Order dbEntry = await applicationDbContext.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
                 if (dbEntry != null)
                 {
@@ -187,13 +186,5 @@ namespace AutomateWarehouse.Data
             IEnumerable<Order> dbEntry = await applicationDbContext.Orders.Where(o => o.Dispatched==false).ToListAsync();
             return dbEntry.ToList();
         }
-
-        //public void SetRestockDate(Product p)
-        //{
-        //    if (p.Stock == 0)
-        //    {
-        //        p.RestockingDate = DateTime.Today.AddDays(10);
-        //    }
-        //}
     }
 }

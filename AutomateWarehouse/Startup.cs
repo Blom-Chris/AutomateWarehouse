@@ -30,12 +30,6 @@ namespace AutomateWarehouse
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            //Dessa behövs inte längre. Om vi injectar Interfaces i razor-sidorna istället?
-            services.AddScoped<ProductRepository>();
-            services.AddScoped<CustomerRepository>();
-            services.AddScoped<OrderLineRepository>();
-            services.AddScoped<OrderRepository>();
-
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IOrderLineRepository, OrderLineRepository>();

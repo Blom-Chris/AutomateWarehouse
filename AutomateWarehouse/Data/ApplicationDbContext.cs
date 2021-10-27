@@ -34,7 +34,7 @@ namespace AutomateWarehouse.Data
       base.OnModelCreating(modelBuilder);
     }
 
-    private List<Customer> GetCustomers()
+    private static List<Customer> GetCustomers()
     {
       return new List<Customer>
       {
@@ -42,7 +42,7 @@ namespace AutomateWarehouse.Data
       new Customer { Id =880417 , Name ="Test Testsson", Phone ="0704444444", Email ="t.test@outlook.com"}
       };
     }
-    private List<Product> GetProducts()
+    private static List<Product> GetProducts()
     {
       return new List<Product>
       { 
@@ -50,14 +50,14 @@ namespace AutomateWarehouse.Data
         new Product { Id = 2, Name = "A blue pen", Price = 5.99, Stock = 50, Description ="It ’s a bluepen" },
     };
     }
-    private List<Order> GetOrders()
+    private static List<Order> GetOrders()
     {
       return new List<Order>
       { 
         new Order { Id = 991, CustomerId = GetCustomers()[0].Id , DeliveryAddress= "Hamngatan 3", Dispatched = false, OrderDate = DateTime.Now.Date, PaymentCompleted = false }
     };
     }
-    private List<OrderLine> GetOrderLines()
+    private static List<OrderLine> GetOrderLines()
     {
       return new List<OrderLine>
       { 

@@ -34,11 +34,11 @@ namespace AutomateWarehouse.Data
         {
             try
             {
-                await SetRestockDate(p);
+                RestockDate restockdate = new(p);
                 applicationDbContext.Products.Add(p);
                 await applicationDbContext.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -57,7 +57,7 @@ namespace AutomateWarehouse.Data
                 applicationDbContext.Remove(p);
                 await applicationDbContext.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -77,7 +77,7 @@ namespace AutomateWarehouse.Data
                 {
                     product.RestockingDate = RestockDate.SetRestockDate(product);
                 }
-                Product dbEntry = applicationDbContext.Products.FirstOrDefault(a => a.Id == product.Id);
+                Product dbEntry = await applicationDbContext.Products.FirstOrDefaultAsync(a => a.Id == product.Id);
                 if (dbEntry != null)
                 {
                     dbEntry.Name = product.Name;
@@ -101,23 +101,8 @@ namespace AutomateWarehouse.Data
         /// <returns></returns>
         public async Task<List<Product>> EmptyStock()
         {
-            IEnumerable<Product> result = applicationDbContext.Products.Where(a => a.Stock < 1);
+            IEnumerable<Product> result = await applicationDbContext.Products.Where(a => a.Stock < 1).ToListAsync();
             return result.ToList();
-        }
-
-        /// <summary>
-        /// Sets the restocking date for a product to today +10.
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        public async Task<Product> SetRestockDate(Product p)
-        {
-            if(p.Stock == 0)
-            {
-                p.RestockingDate = DateTime.Today.AddDays(10);
-                
-            }
-            return p;
         }
     }
 }
