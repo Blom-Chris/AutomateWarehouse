@@ -81,11 +81,13 @@
                         <select type="text" id="prod" class="form-control select-picker" @bind="@newOrderLine.ProductId">
 
                             <option value="">Choose a product</option>
+                            <option>-----------------------</option>
                             @foreach (var product in products)
                             {
                                 if (product.Stock > 0)
                                 {
-                                    <option value="@product.Id"> @product.Name </option>
+                                    <option value="@product.Id"> @product.Name (@product.Stock avaliable)</option>
+
                                 }
                                 else
                                 {
