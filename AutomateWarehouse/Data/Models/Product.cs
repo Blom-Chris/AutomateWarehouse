@@ -35,8 +35,6 @@ namespace AutomateWarehouse.Data
 
         private double _price;
         [Required]
-
-        [RegularExpression(@"\d+(\.\d{1,2})?")]
         [Range(0, 9999999999999999.99, ErrorMessage = "Price must be greater than 0")]
         public double Price
         {
